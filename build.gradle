@@ -92,6 +92,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
     annotationProcessor 'org.projectlombok:lombok'
 
     testRuntimeOnly 'com.h2database:h2'
