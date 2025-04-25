@@ -1,0 +1,45 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+permissions:
+  contents: read
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4.2.2
+      with:
+        java-version: 21
+        distribution: 'temurin'
+
+    - name: gradlew setting
+      run: chmod 744 gradlew 
+      
+    - name: Get project version from Gradle
+      run: echo "VERSION=$(cat build.gradle | grep "version = " | awk '{print $3}')" >> $GITHUB_ENV
+      
+    - name: build
+      run: ./gradlew clean build
+      
+    - name: Build the Docker image
+      run: docker build . --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ env.VERSION }}
+      
+    - name: Docker Login
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_SECRET }}
+      
+    - name: Docker push
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ env.VERSION }}
+      
+    - name: Docker tag change latest
+      run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ env.VERSION }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ secrets.DOCKER_TAG }}
+
+    - name: Docker push latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ secrets.DOCKER_TAG }}
