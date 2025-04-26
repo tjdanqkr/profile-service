@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,9 @@ public class ProfileController {
         return ApiResponse.success(profileService.getProfileDetail(profileId));
     }
     @GetMapping("/api/v1/profiles")
-    public ApiResponse<Page<ProfileResponse>> getProfiles(@PageableDefault(size = 10, page = 0, sort = "createAt") Pageable pageable) {
-        return ApiResponse.success(profileService.getProfiles(pageable));
+    public ApiResponse<PagedModel<ProfileResponse>> getProfiles(
+            @PageableDefault(size = 10, page = 0, sort = "createAt") Pageable pageable) {
+        Page<ProfileResponse> profiles = profileService.getProfiles(pageable);
+        return ApiResponse.success(new PagedModel<>(profiles));
     }
 }
