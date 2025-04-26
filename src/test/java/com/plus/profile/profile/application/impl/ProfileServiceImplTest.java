@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -49,16 +48,16 @@ class ProfileServiceImplTest {
             // given
             UUID profileId = UUID.randomUUID();
             Profile profile = Profile.builder().id(profileId).title("title").content("content").build();
-            ProfileDetailResponse mockResponse = new ProfileDetailResponse(profile);
+            ProfileDetailResponse response = new ProfileDetailResponse(profile);
 
-            given(profileRepositoryCustom.findProfileById(profileId)).willReturn(Optional.of(mockResponse));
+            given(profileRepositoryCustom.findProfileById(profileId)).willReturn(Optional.of(response));
 
             // when
             ProfileDetailResponse result = profileService.getProfileDetail(profileId);
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(profileId);
+            assertThat(result.getProfileId()).isEqualTo(profileId);
             assertThat(result.getTitle()).isEqualTo("title");
 
             then(profileViewBatchService).should(times(1)).addView(profileId);

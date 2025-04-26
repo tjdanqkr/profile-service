@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 public class ProfileDetailResponse {
-    private final UUID id;
+    private final UUID profileId;
     private final String title;
     private final String content;
     private final long viewCount;
@@ -19,7 +19,7 @@ public class ProfileDetailResponse {
 
     @QueryProjection
     public ProfileDetailResponse(Profile profile) {
-        this.id = profile.getId();
+        this.profileId = profile.getId();
         this.title = profile.getTitle();
         this.content = profile.getContent();
         this.viewCount = profile.getViewCount();
