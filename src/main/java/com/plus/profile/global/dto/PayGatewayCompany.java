@@ -1,7 +1,8 @@
-package com.plus.profile.payment.domain;
+package com.plus.profile.global.dto;
 
 import lombok.Getter;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 @Getter
 public enum PayGatewayCompany {
     TOSS("https://api.tosspayments.com/v1/payments/{orderId}", RequestMethod.GET, "paymentKey"),

@@ -1,5 +1,6 @@
 package com.plus.profile.payment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,6 +24,7 @@ public class PaymentCancellation extends BaseTimeEntity {
     @Column(name = "CANCELLATION_ID")
     private Long id;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRANSACTION_ID", nullable = false)
     private PaymentTransaction paymentTransaction;

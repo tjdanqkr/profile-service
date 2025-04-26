@@ -10,6 +10,7 @@ import java.util.UUID;
         indexes={
                 @Index(name = "IDX_PAYMENT_USER_COUPON_USERID", columnList = "USERID"),
                 @Index(name = "IDX_PAYMENT_USER_COUPON_COUPON_CODE", columnList = "COUPON_CODE"),
+                @Index(name = "IDX_PAYMENT_USER_COUPON_COUPON_ID", columnList = "COUPON_ID"),
                 @Index(name = "IDX_PAYMENT_USER_COUPON_IS_USED", columnList = "IS_USED"),
                 @Index(name = "IDX_PAYMENT_USER_COUPON_EXPIRATION_DATE", columnList = "EXPIRATION_DATE"),
         })
@@ -22,6 +23,8 @@ public class UserPointLog {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="USER_POINTS_LOG_ID")
     private Long id;
+    @Column(name="USERID", nullable = false)
+    private UUID userId;
 
     @Column(name="COUPON_IS_USED", nullable = false)
     @Builder.Default
@@ -30,6 +33,8 @@ public class UserPointLog {
     private UUID couponId;
     @Column(name="USER_COUPON_ID")
     private Long userCouponId;
+    @Column(name="COUPON_CODE", nullable = false)
+    private String couponCode;
     @Column(name="COUPON_DESCRIPTION")
     private String couponDescription;
     @Column(name="COUPON_DISCOUNT_AMOUNT")

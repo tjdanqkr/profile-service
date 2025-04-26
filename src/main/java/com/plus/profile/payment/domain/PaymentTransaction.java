@@ -1,11 +1,10 @@
 package com.plus.profile.payment.domain;
 
+import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
@@ -66,7 +65,7 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Builder.Default
     private boolean isCanceled = false;
 
-    @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PaymentCancellation paymentCancellation;
 
 
