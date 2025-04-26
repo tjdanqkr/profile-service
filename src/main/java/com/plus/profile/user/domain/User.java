@@ -4,6 +4,8 @@ import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -35,4 +37,12 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private UserRole role = UserRole.USER;
 
+    @OneToMany
+    @JoinColumn(name = "USER_ID")
+    @ToString.Exclude
+    @Builder.Default
+    private Set<UserCoupon> userCoupons = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    UserPoint userPoint;
 }

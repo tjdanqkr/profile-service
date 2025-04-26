@@ -30,7 +30,8 @@ public class Profile extends BaseTimeEntity {
     @Column(name="TITLE", nullable=false)
     private String title;
 
-    @Column(name="CONTENT", nullable=false)
+    @Lob
+    @Column(name="CONTENT", nullable=false, columnDefinition = "TEXT")
     private String content;
 
     @Column(name="IS_DELETED", nullable=false)
