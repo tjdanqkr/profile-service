@@ -30,7 +30,7 @@ public class ProfileView {
     private Profile profile;
 
     @CreatedDate
-    @Column(name="VIEWED_AT")
+    @Column(name="VIEWED_AT", nullable=false)
     private LocalDateTime viewedAt;
     public static ProfileView of(UUID profileId) {
         return ProfileView.builder()

@@ -24,14 +24,14 @@ public class User extends BaseTimeEntity {
     @Column(name="USER_ID")
     private UUID id;
 
-    @Column(name="USERNAME", unique=true)
+    @Column(name="USERNAME", unique=true, nullable=false)
     private String username;
 
-    @Column(name="PASSWORD")
+    @Column(name="PASSWORD", nullable=false)
     private String encodedPassword;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="ROLE")
+    @Column(name="ROLE", nullable=false)
     @Builder.Default
     private UserRole role = UserRole.USER;
 

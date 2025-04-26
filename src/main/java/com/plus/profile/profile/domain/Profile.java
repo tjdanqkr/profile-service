@@ -27,22 +27,24 @@ public class Profile extends BaseTimeEntity {
     @Column(name="PROFILE_ID")
     private UUID id;
 
-    @Column(name="TITLE")
+    @Column(name="TITLE", nullable=false)
     private String title;
 
-    @Column(name="CONTENT")
+    @Column(name="CONTENT", nullable=false)
     private String content;
 
-    @Column(name="IS_DELETED")
-    private boolean deleted;
+    @Column(name="IS_DELETED", nullable=false)
+    @Builder.Default
+    private boolean deleted = false;
 
-    @Column(name="VIEW_COUNT")
-    private long viewCount;
+    @Column(name="VIEW_COUNT", nullable=false)
+    @Builder.Default
+    private long viewCount = 0;
 
-    @Column(name = "USER_ID")
+    @Column(name = "USER_ID", nullable=false, unique = true)
     private UUID userId;
 
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME", nullable=false, unique = true)
     private String username;
 
     @OneToMany(mappedBy="profile", cascade=CascadeType.ALL, fetch=FetchType.LAZY)

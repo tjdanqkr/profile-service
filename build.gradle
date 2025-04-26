@@ -20,6 +20,7 @@ private excludedClassFilesForReport(classDirectories) {
             files(classDirectories.files.collect {
                 fileTree(dir: it, exclude: [
                         "**/global/**",
+                        "**/init/**",
                         "**/Q*",
                         "**/*Dto*",
                         "**/dto/**",
