@@ -6,9 +6,16 @@ import lombok.*;
 
 import java.util.UUID;
 
-// 결제 트랜잭션
+
 @Entity
-@Table(name = "PAYMENT_TRANSACTIONS")
+@Table(name = "PAYMENT_TRANSACTIONS",
+        indexes = {
+                @Index(name = "IDX_PAYMENT_TRANSACTION_USER_ID", columnList = "USER_ID"),
+                @Index(name = "IDX_PAYMENT_TRANSACTION_CREATED_AT", columnList = "CREATED_AT"),
+                @Index(name = "IDX_PAYMENT_TRANSACTION_ORDER_ID", columnList = "ORDER_ID"),
+                @Index(name = "IDX_PAYMENT_TRANSACTION_TRANSACTION_STATUS", columnList = "TRANSACTION_STATUS"),
+                @Index(name = "IDX_PAYMENT_TRANSACTION_PG_TYPE", columnList = "PG_TYPE")
+        })
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,6 +50,10 @@ public class PaymentTransaction extends BaseTimeEntity {
 
     @Column(name = "RECEIPT_URL")
     private String receiptUrl;
+
+    @Lob
+    @Column(name = "RECEIPT_BODY", columnDefinition = "TEXT")
+    private String paymentBody;
 
     @Lob
     @Column(name = "PAYMENT_RESPONSE", columnDefinition = "TEXT")

@@ -6,7 +6,11 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "PAYMENT_CANCELLATIONS")
+@Table(name = "PAYMENT_CANCELLATIONS",
+        indexes = {
+                @Index(name = "IDX_PAYMENT_CANCELLATION_TRANSACTION_ID", columnList = "TRANSACTION_ID"),
+                @Index(name = "IDX_PAYMENT_CANCELLATION_CREATED_AT", columnList = "CREATED_AT")
+        })
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,4 +39,5 @@ public class PaymentCancellation extends BaseTimeEntity {
     @Lob
     @Column(name = "CANCEL_RESPONSE", columnDefinition = "TEXT")
     private String cancelResponse;
+
 }
