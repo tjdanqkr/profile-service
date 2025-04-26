@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.UUID;
 
+// 결제 트랜잭션
 @Entity
 @Table(name = "PAYMENT_TRANSACTIONS")
 @Getter
@@ -23,8 +24,8 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Column(name = "USER_ID", nullable = false)
     private UUID userId;
 
-    @Column(name = "ORDER_ID", nullable = false, unique = true)
-    private UUID orderId;
+    @Column(name = "ORDER_ID", nullable = false)
+    private String orderId;
 
     @Column(name = "ORDER_NAME", nullable = false)
     private String orderName;
@@ -45,17 +46,14 @@ public class PaymentTransaction extends BaseTimeEntity {
 
     @Lob
     @Column(name = "PAYMENT_RESPONSE", columnDefinition = "TEXT")
-    private String receiptResponse;
+    private String paymentResponse;
 
     @Column(name = "IS_CANCELED", nullable = false)
     @Builder.Default
     private boolean isCanceled = false;
 
-    @Column(name= "USE_COUPON", nullable = false)
-    @Builder.Default
-    private boolean useCoupon = false;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_COUPON_ID")
-    private PaymentUserCoupon userCoupon;
+    @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private PaymentCancellation paymentCancellation;
 }
+
+
