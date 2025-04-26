@@ -2,11 +2,13 @@ package com.plus.profile.user.presentation.dto;
 
 import com.plus.profile.user.domain.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
 @Getter
+@RequiredArgsConstructor
 public class UserDetailResponse {
     private final UUID id;
     private final String username;
