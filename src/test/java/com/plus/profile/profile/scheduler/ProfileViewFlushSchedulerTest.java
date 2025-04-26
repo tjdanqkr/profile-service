@@ -26,8 +26,6 @@ class ProfileViewFlushSchedulerTest {
     @Autowired
     private ProfileViewFlushScheduler profileViewFlushScheduler;
 
-    @Autowired
-    private EntityManager em;
 
     private UUID profileId;
 
@@ -59,9 +57,6 @@ class ProfileViewFlushSchedulerTest {
 
             // when
             profileViewFlushScheduler.flush();
-            em.flush();
-            em.clear();
-
             // then
             Profile profile = profileRepository.findById(profileId).orElseThrow();
             assertThat(profile.getViewCount()).isEqualTo(viewCount);

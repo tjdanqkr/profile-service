@@ -20,7 +20,6 @@ import static com.plus.profile.profile.domain.QProfile.profile;
 @RequiredArgsConstructor
 public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-    private final ProfileViewBatchService profileViewBatchService;
     @Override
     public Optional<ProfileDetailResponse> findProfileById(UUID id) {
         ProfileDetailResponse profileDetailResponse = queryFactory.select(new QProfileDetailResponse(
@@ -32,7 +31,6 @@ public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
         if(profileDetailResponse == null) {
             return Optional.empty();
         }
-        profileViewBatchService.addView(id);
         return Optional.of(profileDetailResponse);
     }
 }

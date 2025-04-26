@@ -1,5 +1,6 @@
 package com.plus.profile.profile.integration;
 
+import com.plus.profile.profile.application.ProfileService;
 import com.plus.profile.profile.domain.Profile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.infra.impl.ProfileRepositoryCustomImpl;
@@ -27,7 +28,7 @@ class ProfileViewIntegrationTest {
     private ProfileRepository profileRepository;
 
     @Autowired
-    private ProfileRepositoryCustomImpl profileRepositoryCustomImpl;
+    private ProfileService profileService;
 
     @Autowired
     private ProfileViewFlushScheduler profileViewFlushScheduler;
@@ -63,7 +64,7 @@ class ProfileViewIntegrationTest {
             for (int i = 0; i < threadCount; i++) {
                 executorService.submit(() -> {
                     try {
-                        profileRepositoryCustomImpl.findProfileById(profileId);
+                        profileService.getProfileDetail(profileId);
                     } finally {
                         latch.countDown();
                     }
