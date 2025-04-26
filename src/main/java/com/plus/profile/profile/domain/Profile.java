@@ -1,5 +1,6 @@
 package com.plus.profile.profile.domain;
 
+import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +18,10 @@ import java.util.UUID;
         })
 @Getter
 @Builder
-@ToString
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @EqualsAndHashCode(of="id", callSuper=false)
-public class Profile {
+public class Profile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     @Column(name="PROFILE_ID")
@@ -30,8 +30,8 @@ public class Profile {
     @Column(name="TITLE")
     private String title;
 
-    @Column(name="DETAIL")
-    private String detail;
+    @Column(name="CONTENT")
+    private String content;
 
     @Column(name="IS_DELETED")
     private boolean deleted;

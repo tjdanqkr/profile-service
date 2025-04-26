@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name="PROFILES_VIEWS",
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
         })
 @Getter
 @Builder
-@ToString
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @EqualsAndHashCode(of="id", callSuper=false)
@@ -32,5 +32,10 @@ public class ProfileView {
     @CreatedDate
     @Column(name="VIEWED_AT")
     private LocalDateTime viewedAt;
-
+    public static ProfileView of(UUID profileId) {
+        return ProfileView.builder()
+                .profile(Profile.builder().id(profileId).build())
+                .viewedAt(LocalDateTime.now())
+                .build();
+    }
 }
