@@ -33,7 +33,7 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Column(name = "USER_ID", nullable = false)
     private UUID userId;
 
-    @Column(name = "ORDER_ID", nullable = false)
+    @Column(name = "ORDER_ID", nullable = false, unique = true)
     @Builder.Default
     private UUID orderId = UUID.randomUUID();
 

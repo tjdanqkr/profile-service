@@ -36,11 +36,11 @@ public class UserPointLog {
     private Long couponDiscountAmount;
 
     @Column(name="BEFORE_POINTS", nullable=false)
-    private Long beforePoints;
+    private long beforePoints;
     @Column(name="AFTER_POINTS", nullable=false)
-    private Long afterPoints;
+    private long afterPoints;
     @Column(name="POINTS_AMOUNT", nullable=false)
-    private Long pointsAmount;
+    private long pointsAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name="POINT_LOG_TYPE", nullable=false)

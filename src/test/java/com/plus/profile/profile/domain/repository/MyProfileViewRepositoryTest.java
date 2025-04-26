@@ -43,7 +43,7 @@ class MyProfileViewRepositoryTest {
             // given
 
             // when
-            List<ProfileView> profileViews = profileViewRepository.findByProfileId(profileId);
+            List<ProfileView> profileViews = profileViewRepository.findByMyProfileId(profileId);
 
             // then
             assertNotNull(profileViews);
@@ -57,7 +57,7 @@ class MyProfileViewRepositoryTest {
             UUID nonExistentProfileId = UUID.randomUUID();
 
             // when
-            List<ProfileView> profileViews = profileViewRepository.findByProfileId(nonExistentProfileId);
+            List<ProfileView> profileViews = profileViewRepository.findByMyProfileId(nonExistentProfileId);
 
             // then
             assertNotNull(profileViews);

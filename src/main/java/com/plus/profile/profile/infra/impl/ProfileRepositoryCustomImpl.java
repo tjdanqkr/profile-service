@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.plus.profile.profile.domain.QProfile.profile;
+import static com.plus.profile.profile.domain.QMyProfile.myProfile;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,10 +28,10 @@ public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
     @Override
     public Optional<ProfileDetailResponse> findProfileById(UUID id) {
         ProfileDetailResponse profileDetailResponse = queryFactory.select(new QProfileDetailResponse(
-                        profile
+                        myProfile
                 ))
-                .from(profile)
-                .where(profile.id.eq(id))
+                .from(myProfile)
+                .where(myProfile.id.eq(id))
                 .fetchOne();
         if(profileDetailResponse == null) {
             return Optional.empty();
@@ -44,18 +44,18 @@ public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
         Sort sort = pageable.getSort();
         List<ProfileResponse> profiles = queryFactory.select(
                         new QProfileResponse(
-                                profile
+                                myProfile
                         )
-                ).from(profile)
-                .where(profile.deleted.isFalse())
+                ).from(myProfile)
+                .where(myProfile.deleted.isFalse())
                 .orderBy(
                         toOrderSpecifier(sort)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        Long total = queryFactory.select(profile.count())
-                .from(profile)
+        Long total = queryFactory.select(myProfile.count())
+                .from(myProfile)
                 .fetchOne();
         if(total == null) {
             total = 0L;
@@ -68,14 +68,14 @@ public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
         if(result != null) return result;
         result = orderByViewCount(sort);
         if(result != null) return result;
-        return profile.createdAt.desc();
+        return myProfile.createdAt.desc();
     }
     private static OrderSpecifier<String> orderByUsername(Sort sort) {
         Sort.Order username = sort.getOrderFor("username");
-        return username != null ? profile.username.asc() : null;
+        return username != null ? myProfile.username.asc() : null;
     }
     private static OrderSpecifier<Long> orderByViewCount(Sort sort) {
         Sort.Order viewCount = sort.getOrderFor("viewCount");
-        return viewCount != null ? profile.viewCount.desc() : null;
+        return viewCount != null ? myProfile.viewCount.desc() : null;
     }
 }

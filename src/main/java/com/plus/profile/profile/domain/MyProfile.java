@@ -48,7 +48,7 @@ public class MyProfile extends BaseTimeEntity {
     @Column(name = "USERNAME", nullable=false, unique = true)
     private String username;
 
-    @OneToMany(mappedBy="profile", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="myProfile", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default
     private Set<ProfileView> profileViews = new HashSet<>();

@@ -22,8 +22,10 @@ public class UserCoupon {
     private UUID couponId;
     @Column(name="COUPON_CODE", nullable = false)
     private String couponCode;
+    @Column(name="COUPON_IS_PERCENTAGE", nullable = false)
+    private boolean couponIsPercentage;
     @Column(name="DISCOUNT_AMOUNT", nullable = false)
-    private Long discountAmount;
+    private long discountAmount;
     @Column(name="EXPIRATION_DATE", nullable = false)
     private LocalDateTime expirationDate;
     @Column(name="DESCRIPTION", nullable = false)
