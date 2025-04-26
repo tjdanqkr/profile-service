@@ -59,7 +59,7 @@ class ProfileControllerTest {
                     .andExpect(jsonPath("$.data.content").value("content"));
         }
         @Test
-        @DisplayName("존재하지 않는 프로필 ID로 조회 시 404 에러를 반환한��")
+        @DisplayName("존재하지 않는 프로필 ID로 조회 시 404 에러를 반환한다")
         void shouldReturnNotFound() throws Exception {
             // given
             UUID profileId = UUID.randomUUID();
