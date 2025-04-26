@@ -28,6 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class MyProfileServiceImplTest {
@@ -61,6 +62,7 @@ class MyProfileServiceImplTest {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getContent()).isEmpty();
+            verify(profileRepositoryCustom).findProfiles(pageable);
         }
 
         @Test
@@ -73,6 +75,7 @@ class MyProfileServiceImplTest {
             assertThatThrownBy(() -> profileService.getProfiles(pageable))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining(ProfileExceptionCode.PAGE_SIZE_TOO_LARGE.getMessage());
+            then(profileRepositoryCustom).should(times(0)).findProfiles(pageable);
         }
     }
 
@@ -114,6 +117,7 @@ class MyProfileServiceImplTest {
                     .hasMessageContaining(ProfileExceptionCode.PROFILE_NOT_FOUND.getMessage());
 
             then(profileViewBatchService).shouldHaveNoInteractions();
+            verify(profileRepositoryCustom, times(1)).findProfileById(profileId);
         }
     }
 }
