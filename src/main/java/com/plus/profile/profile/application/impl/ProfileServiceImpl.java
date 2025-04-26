@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final ProfileViewBatchService profileViewBatchService;
 
     @Override
+    @Transactional
     public ProfileDetailResponse getProfileDetail(UUID profileId) {
         ProfileDetailResponse response = profileRepositoryCustom.findProfileById(profileId)
                 .orElseThrow(() -> new BusinessException(ProfileExceptionCode.PROFILE_NOT_FOUND));
@@ -31,6 +33,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ProfileResponse> getProfiles(Pageable pageable) {
         if (pageable.getPageSize() > 1000) {
             throw new BusinessException(ProfileExceptionCode.PAGE_SIZE_TOO_LARGE);

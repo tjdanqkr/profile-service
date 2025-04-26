@@ -6,5 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepositoryCustom {
-    Optional<UserDetailResponse> findUserWithPointById(UUID userId);
+    Optional<UserDetailResponse> findUserDetailById(UUID userId);
+
 }

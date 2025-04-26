@@ -1,7 +1,6 @@
 package com.plus.profile.user.presentation.dto;
 
 import com.plus.profile.user.domain.User;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class UserDetailResponse {
     private final long point;
     private final List<UserCouponResponse> coupons;
 
-    @QueryProjection
+
     public UserDetailResponse(User user, long point, List<UserCouponResponse> coupons) {
         this.id = user.getId();
         this.username = user.getUsername();
