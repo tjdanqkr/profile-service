@@ -23,6 +23,5 @@ public class ProfileResponse {
         this.createdAt = profile.getCreatedAt();
         this.userId = profile.getUserId();
         this.username = profile.getUsername();
-
     }
 }

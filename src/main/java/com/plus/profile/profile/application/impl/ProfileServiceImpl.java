@@ -1,6 +1,6 @@
 package com.plus.profile.profile.application.impl;
 
-import com.plus.profile.global.error.BusinessException;
+import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.profile.application.ProfileService;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.exception.ProfileExceptionCode;

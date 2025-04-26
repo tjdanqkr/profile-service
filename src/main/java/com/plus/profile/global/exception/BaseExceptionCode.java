@@ -1,4 +1,4 @@
-package com.plus.profile.global.error;
+package com.plus.profile.global.exception;
 
 public interface BaseExceptionCode {
     int getStatusCode();

@@ -1,4 +1,4 @@
-package com.plus.profile.global.error;
+package com.plus.profile.global.exception;
 
 
 import com.plus.profile.global.dto.ErrorResponse;

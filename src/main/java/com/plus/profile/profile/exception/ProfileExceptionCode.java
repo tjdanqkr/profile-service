@@ -1,6 +1,6 @@
 package com.plus.profile.profile.exception;
 
-import com.plus.profile.global.error.BaseExceptionCode;
+import com.plus.profile.global.exception.BaseExceptionCode;
 import lombok.Getter;
 
 @Getter
