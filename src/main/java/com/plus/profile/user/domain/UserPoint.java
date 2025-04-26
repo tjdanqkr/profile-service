@@ -14,6 +14,7 @@ import lombok.*;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class UserPoint extends BaseTimeEntity {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="POINT_ID")
     private Long id;
 

@@ -1,7 +1,6 @@
 package com.plus.profile.profile.domain;
 
 
-import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,14 +26,14 @@ public class ProfileView {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="PROFILE_ID")
-    private Profile profile;
+    private MyProfile myProfile;
 
     @CreatedDate
     @Column(name="VIEWED_AT", nullable=false)
     private LocalDateTime viewedAt;
     public static ProfileView of(UUID profileId) {
         return ProfileView.builder()
-                .profile(Profile.builder().id(profileId).build())
+                .myProfile(MyProfile.builder().id(profileId).build())
                 .viewedAt(LocalDateTime.now())
                 .build();
     }

@@ -1,7 +1,7 @@
 package com.plus.profile.profile.application.impl;
 
 import com.plus.profile.global.exception.BusinessException;
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.exception.ProfileExceptionCode;
 import com.plus.profile.profile.infra.ProfileRepositoryCustom;
@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-class ProfileServiceImplTest {
+class MyProfileServiceImplTest {
     @Mock
     private ProfileRepository profileRepository;
 
@@ -78,15 +78,15 @@ class ProfileServiceImplTest {
 
     @Nested
     @DisplayName("getProfileDetail 메서드 테스트")
-    class GetProfileDetail {
+    class GetMyProfileDetail {
 
         @Test
         @DisplayName("프로필이 존재하면 정상적으로 반환하고 조회수 추가")
         void shouldReturnProfileDetailAndAddView() {
             // given
             UUID profileId = UUID.randomUUID();
-            Profile profile = Profile.builder().id(profileId).title("title").content("content").build();
-            ProfileDetailResponse response = new ProfileDetailResponse(profile);
+            MyProfile myProfile = MyProfile.builder().id(profileId).title("title").content("content").build();
+            ProfileDetailResponse response = new ProfileDetailResponse(myProfile);
 
             given(profileRepositoryCustom.findProfileById(profileId)).willReturn(Optional.of(response));
 

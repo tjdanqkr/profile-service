@@ -1,12 +1,9 @@
 package com.plus.profile.profile.integration;
 
 import com.plus.profile.profile.application.ProfileService;
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
-import com.plus.profile.profile.infra.impl.ProfileRepositoryCustomImpl;
-import com.plus.profile.profile.scheduler.ProfileViewBatchService;
 import com.plus.profile.profile.scheduler.ProfileViewFlushScheduler;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +19,7 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class ProfileViewIntegrationTest {
+class MyProfileViewIntegrationTest {
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -37,15 +34,15 @@ class ProfileViewIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        Profile profile = Profile.builder()
+        MyProfile myProfile = MyProfile.builder()
                 .title("Integration Test Profile")
                 .content("Detail Content")
                 .viewCount(0)
                 .userId(UUID.randomUUID())
                 .username("integrationTestUser")
                 .build();
-        profileRepository.save(profile);
-        profileId = profile.getId();
+        profileRepository.save(myProfile);
+        profileId = myProfile.getId();
     }
 
     @Nested
@@ -75,8 +72,8 @@ class ProfileViewIntegrationTest {
             profileViewFlushScheduler.flush();
 
             // then
-            Profile profile = profileRepository.findById(profileId).orElseThrow();
-            assertThat(profile.getViewCount()).isEqualTo(threadCount);
+            MyProfile myProfile = profileRepository.findById(profileId).orElseThrow();
+            assertThat(myProfile.getViewCount()).isEqualTo(threadCount);
         }
     }
 }

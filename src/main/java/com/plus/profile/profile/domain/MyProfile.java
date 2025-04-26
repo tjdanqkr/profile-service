@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @EqualsAndHashCode(of="id", callSuper=false)
-public class Profile extends BaseTimeEntity {
+public class MyProfile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     @Column(name="PROFILE_ID")

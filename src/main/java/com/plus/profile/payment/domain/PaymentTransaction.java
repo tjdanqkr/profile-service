@@ -4,6 +4,8 @@ import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
@@ -24,15 +26,16 @@ import java.util.UUID;
 public class PaymentTransaction extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRANSACTION_ID")
-    private UUID id;
+    private Long id;
 
     @Column(name = "USER_ID", nullable = false)
     private UUID userId;
 
     @Column(name = "ORDER_ID", nullable = false)
-    private String orderId;
+    @Builder.Default
+    private UUID orderId = UUID.randomUUID();
 
     @Column(name = "ORDER_NAME", nullable = false)
     private String orderName;
@@ -65,6 +68,8 @@ public class PaymentTransaction extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private PaymentCancellation paymentCancellation;
+
+
 }
 
 
