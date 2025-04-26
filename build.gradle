@@ -20,6 +20,7 @@ private excludedClassFilesForReport(classDirectories) {
             files(classDirectories.files.collect {
                 fileTree(dir: it, exclude: [
                         "**/global/**",
+                        "**/init/**",
                         "**/Q*",
                         "**/*Dto*",
                         "**/dto/**",
@@ -92,6 +93,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
     annotationProcessor 'org.projectlombok:lombok'
 
     testRuntimeOnly 'com.h2database:h2'
@@ -101,4 +105,5 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
