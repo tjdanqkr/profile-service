@@ -1,8 +1,6 @@
 package com.plus.profile.payment.application.impl;
 
-import com.plus.profile.global.dto.CreatePaymentRequest;
-import com.plus.profile.global.dto.CreatePaymentResponse;
-import com.plus.profile.global.dto.PayGatewayCompany;
+import com.plus.profile.global.dto.*;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.payment.application.PaymentCallbackService;
 import com.plus.profile.payment.application.PaymentKakaoClient;
@@ -18,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -82,5 +81,21 @@ public class PaymentServiceImpl implements PaymentService, PaymentCallbackServic
             transaction.failPayment();
         }
         return false;
+    }
+
+    @Override
+    public ConfirmPaymentResponse confirmPointCharge(ConfirmPaymentRequest request) {
+        Optional<PaymentTransaction> byOrderId = paymentTransactionRepository.findByOrderIdAndUserId(request.orderId(), request.userId());
+        if(byOrderId.isEmpty()) return new ConfirmPaymentResponse(request.userId(), request.orderId(), false, 0L);
+        PaymentTransaction transaction = byOrderId.get();
+        if(!transaction.getTransactionStatus().equals(PaymentTransactionStatusType.COMPLETED))
+            return new ConfirmPaymentResponse(request.userId(), request.orderId(), false, 0L);
+
+        return new ConfirmPaymentResponse(
+                request.userId(),
+                transaction.getOrderId(),
+                true,
+                transaction.getTransactionAmount()
+        );
     }
 }

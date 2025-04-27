@@ -26,6 +26,7 @@ public class UserPointLog {
     @Column(name="USERID", nullable = false)
     private UUID userId;
 
+
     @Column(name="COUPON_IS_USED", nullable = false)
     @Builder.Default
     private boolean couponIsUsed = false;
@@ -51,4 +52,13 @@ public class UserPointLog {
     @Column(name="POINT_LOG_TYPE", nullable=false)
     private UserPointLogType type;
 
+    public static UserPointLog createChargeLog(UUID userId, long before, long after, long pointsAmount) {
+        return UserPointLog.builder()
+                .userId(userId)
+                .beforePoints(before)
+                .afterPoints(after)
+                .pointsAmount(pointsAmount)
+                .type(UserPointLogType.CHARGE)
+                .build();
+    }
 }

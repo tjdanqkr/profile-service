@@ -8,6 +8,7 @@ import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.user.application.PointService;
 import com.plus.profile.user.application.UserService;
 import com.plus.profile.user.exception.UserExceptionCode;
+import com.plus.profile.user.presentation.dto.PointChargeConfirmRequest;
 import com.plus.profile.user.presentation.dto.PointChargeRequest;
 import com.plus.profile.user.presentation.dto.UserDetailResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -130,6 +131,51 @@ class UserControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest());
+        }
+    }
+    @Nested
+    @DisplayName("POST /api/v1/users/{userId}/points/confirm")
+    class ConfirmPointChargeTest {
+
+        @Test
+        @DisplayName("포인트 충전 확정 성공")
+        void confirmPointChargeSuccess() throws Exception {
+            // given
+            UUID userId = UUID.randomUUID();
+            UUID orderId = UUID.randomUUID();
+
+            doNothing().when(pointService).confirmPointCharge(userId, orderId);
+
+            PointChargeConfirmRequest request = new PointChargeConfirmRequest(orderId);
+
+            // when & then
+            mockMvc.perform(post("/api/v1/users/{userId}/points/confirm", userId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.statusCode").value(200))
+                    .andExpect(jsonPath("$.success").value(true))
+                    .andExpect(jsonPath("$.data").doesNotExist());
+        }
+
+        @Test
+        @DisplayName("포인트 충전 확정 실패 (BusinessException)")
+        void confirmPointChargeFail() throws Exception {
+            // given
+            UUID userId = UUID.randomUUID();
+            UUID orderId = UUID.randomUUID();
+
+            doThrow(new RuntimeException("결제 검증 실패"))
+                    .when(pointService)
+                    .confirmPointCharge(userId, orderId);
+
+            PointChargeConfirmRequest request = new PointChargeConfirmRequest(orderId);
+
+            // when & then
+            mockMvc.perform(post("/api/v1/users/{userId}/points/confirm", userId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isInternalServerError());
         }
     }
 }

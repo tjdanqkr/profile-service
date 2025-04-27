@@ -1,8 +1,6 @@
 package com.plus.profile.user.application.impl;
 
-import com.plus.profile.global.dto.CreatePaymentRequest;
-import com.plus.profile.global.dto.CreatePaymentResponse;
-import com.plus.profile.global.dto.PayGatewayCompany;
+import com.plus.profile.global.dto.*;
 import com.plus.profile.payment.application.PaymentService;
 import com.plus.profile.user.application.UserPaymentClientService;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,5 +53,24 @@ class PaymentClientServiceImplTest {
         // then
         verify(paymentService, times(1)).createTransaction(request);
         assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("결제 확인 성공")
+    void confirmPointChargeSuccess() {
+        // given
+        UUID userId = UUID.randomUUID();
+        UUID orderId = UUID.randomUUID();
+        ConfirmPaymentRequest request = new ConfirmPaymentRequest(userId, orderId);
+        ConfirmPaymentResponse expectedResponse = new ConfirmPaymentResponse(userId, orderId, true, 5000L);
+
+        when(paymentService.confirmPointCharge(request)).thenReturn(expectedResponse);
+
+        // when
+        ConfirmPaymentResponse response = paymentClientService.confirmPointCharge(request);
+
+        // then
+        assertThat(response).isEqualTo(expectedResponse);
+        verify(paymentService, times(1)).confirmPointCharge(request);
     }
 }

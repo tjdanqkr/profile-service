@@ -41,7 +41,7 @@ class PaymentCallbackControllerTest {
                             .param("orderId", "sampleOrderId")
                             .param("amount", "10000"))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/payments/toss/success"));
+                    .andExpect(redirectedUrl("/payments/toss/success?orderId=sampleOrderId"));
         }
 
         @Test
@@ -77,7 +77,7 @@ class PaymentCallbackControllerTest {
                             .param("pg_token", "samplePgToken")
                             .param("orderId", "sampleOrderId"))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/payments/kakao/success"));
+                    .andExpect(redirectedUrl("/payments/kakao/success?orderId=sampleOrderId"));
         }
 
         @Test

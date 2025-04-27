@@ -24,7 +24,7 @@ public class PaymentCallbackController {
             HttpServletResponse response
     ) throws IOException {
         boolean result = paymentService.confirmTossPayment(paymentKey, orderId, amount);
-        response.sendRedirect(result ? "/payments/toss/success" : "/payments/toss/fail");
+        response.sendRedirect(result ? String.format("/payments/toss/success?orderId=%s", orderId) : "/payments/toss/fail");
     }
     @GetMapping("/api/v1/payments/kakao/callback")
     public void handleCallback(
@@ -33,6 +33,6 @@ public class PaymentCallbackController {
             HttpServletResponse response) throws IOException {
 
         boolean result = paymentService.confirmKakaoPayment(pg_token, orderId);
-        response.sendRedirect(result ? "/payments/kakao/success" : "/payments/kakao/fail");
+        response.sendRedirect(result ? String.format("/payments/kakao/success?orderId=%s", orderId)  : "/payments/kakao/fail");
     }
 }

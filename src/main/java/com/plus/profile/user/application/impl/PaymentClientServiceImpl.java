@@ -1,6 +1,8 @@
 package com.plus.profile.user.application.impl;
 
 import com.plus.profile.global.client.PaymentClientService;
+import com.plus.profile.global.dto.ConfirmPaymentRequest;
+import com.plus.profile.global.dto.ConfirmPaymentResponse;
 import com.plus.profile.global.dto.CreatePaymentRequest;
 import com.plus.profile.global.dto.CreatePaymentResponse;
 import com.plus.profile.user.application.UserPaymentClientService;
@@ -16,4 +18,8 @@ public class PaymentClientServiceImpl implements UserPaymentClientService {
         return paymentServiceImpl.createTransaction(request);
     }
 
+    @Override
+    public ConfirmPaymentResponse confirmPointCharge(ConfirmPaymentRequest request) {
+        return paymentServiceImpl.confirmPointCharge(request);
+    }
 }

@@ -4,6 +4,7 @@ import com.plus.profile.global.dto.ApiResponse;
 import com.plus.profile.global.dto.CreatePaymentResponse;
 import com.plus.profile.user.application.PointService;
 import com.plus.profile.user.application.UserService;
+import com.plus.profile.user.presentation.dto.PointChargeConfirmRequest;
 import com.plus.profile.user.presentation.dto.PointChargeRequest;
 import com.plus.profile.user.presentation.dto.UserDetailResponse;
 import jakarta.validation.Valid;
@@ -27,5 +28,11 @@ public class UserController {
             ) {
         CreatePaymentResponse response = pointService.chargePoint(userId, request);
         return ApiResponse.success(response);
+    }
+    @PostMapping("/api/v1/users/{userId}/points/confirm")
+    public ApiResponse<Void> confirmPointCharge(@PathVariable UUID userId,
+                                                @RequestBody PointChargeConfirmRequest request) {
+        pointService.confirmPointCharge(userId, request.orderId());
+        return ApiResponse.success(Void.TYPE.cast(null));
     }
 }

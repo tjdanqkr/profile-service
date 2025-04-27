@@ -24,4 +24,8 @@ public class UserPoint extends BaseTimeEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="USER_ID", referencedColumnName = "USER_ID")
     private User user;
+
+    public void charge(long amount) {
+        this.point += amount;
+    }
 }
