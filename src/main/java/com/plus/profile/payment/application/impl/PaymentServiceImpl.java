@@ -95,6 +95,7 @@ public class PaymentServiceImpl implements PaymentService, PaymentCallbackServic
             return new ConfirmPaymentResponse(request.userId(), request.orderId(), ConfirmPaymentResult.PENDING, 0L);
         if(transaction.getPaymentConfirmStatus().equals(PaymentConfirmStatus.CONFIRMED))
             return new ConfirmPaymentResponse(request.userId(), request.orderId(), ConfirmPaymentResult.ALREADY_PROCESSED, 0L);
+        transaction.confirm();
         return new ConfirmPaymentResponse(
                 request.userId(),
                 transaction.getOrderId(),

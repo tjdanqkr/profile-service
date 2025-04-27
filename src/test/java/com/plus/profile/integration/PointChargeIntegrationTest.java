@@ -9,10 +9,7 @@ import com.plus.profile.point.presentation.dto.PointChargeRequest;
 import com.plus.profile.user.domain.User;
 import com.plus.profile.user.domain.UserRole;
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,50 +66,113 @@ class PointChargeIntegrationTest {
         em.createQuery("DELETE FROM User").executeUpdate();
 
     }
+    @Nested
+    @DisplayName("포인트 충전 플로우")
+    class PointChargeFlow{
+        @Test
+        @DisplayName("500 포인트 충전 성공")
+        void pointChargeFlow() throws Exception {
+            // 1. 유저 조회 (GET /users/{userId})
+            mockMvc.perform(get("/api/v1/users/" + userId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.id").value(userId.toString()));
 
-    @Test
-    @DisplayName("포인트 충전 플로우 통합 테스트")
-    void pointChargeFlow() throws Exception {
-        // 1. 유저 조회 (GET /users/{userId})
-        mockMvc.perform(get("/api/v1/users/" + userId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(userId.toString()));
+            // 2. 포인트 충전 요청 (POST /users/{userId}/points)
+            PointChargeRequest pointChargeRequest = new PointChargeRequest(500L, PayGatewayCompany.TOSS, "abc");
 
-        // 2. 포인트 충전 요청 (POST /users/{userId}/points)
-        PointChargeRequest pointChargeRequest = new PointChargeRequest(500L, PayGatewayCompany.TOSS, "abc");
+            String pointChargeResult = mockMvc.perform(post("/api/v1/users/" + userId + "/points")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(pointChargeRequest)))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
 
-        String pointChargeResult = mockMvc.perform(post("/api/v1/users/" + userId + "/points")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(pointChargeRequest)))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+            CreatePaymentResponse paymentResponse = objectMapper.readValue(
+                    objectMapper.readTree(pointChargeResult).path("data").toString(),
+                    CreatePaymentResponse.class
+            );
+            UUID orderId = paymentResponse.orderId();
 
-        CreatePaymentResponse paymentResponse = objectMapper.readValue(
-                objectMapper.readTree(pointChargeResult).path("data").toString(),
-                CreatePaymentResponse.class
-        );
-        UUID orderId = paymentResponse.orderId();
+            // 3. 결제 콜백 호출 (GET /payments/toss/callback)
+            mockMvc.perform(get("/api/v1/payments/toss/callback")
+                            .param("paymentKey", "test-payment-key")
+                            .param("orderId", orderId.toString())
+                            .param("amount", "500"))
+                    .andExpect(status().isOk());
 
-        // 3. 결제 콜백 호출 (GET /payments/toss/callback)
-        mockMvc.perform(get("/api/v1/payments/toss/callback")
-                        .param("paymentKey", "test-payment-key")
-                        .param("orderId", orderId.toString())
-                        .param("amount", "500"))
-                .andExpect(status().isOk());
+            // 4. 포인트 충전 확정 (POST /users/{userId}/points/confirm)
+            PointChargeConfirmRequest confirmRequest = new PointChargeConfirmRequest(orderId);
 
-        // 4. 포인트 충전 확정 (POST /users/{userId}/points/confirm)
-        PointChargeConfirmRequest confirmRequest = new PointChargeConfirmRequest(orderId);
+            mockMvc.perform(post("/api/v1/users/" + userId + "/points/confirm")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(confirmRequest)))
+                    .andExpect(status().isOk());
 
-        mockMvc.perform(post("/api/v1/users/" + userId + "/points/confirm")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(confirmRequest)))
-                .andExpect(status().isOk());
+            // 5. 다시 유저 조회해서 포인트 확인
+            mockMvc.perform(get("/api/v1/users/" + userId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.point").value(500));
+        }
+        @Test
+        @DisplayName("500 포인트 이미 충전하여 실패")
+        void alreadyPointChargeFlow() throws Exception {
+            // 1. 유저 조회 (GET /users/{userId})
+            mockMvc.perform(get("/api/v1/users/" + userId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.id").value(userId.toString()));
 
-        // 5. 다시 유저 조회해서 포인트 확인
-        mockMvc.perform(get("/api/v1/users/" + userId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.point").value(500));
+            // 2. 포인트 충전 요청 (POST /users/{userId}/points)
+            PointChargeRequest pointChargeRequest = new PointChargeRequest(500L, PayGatewayCompany.TOSS, "abc");
+
+            String pointChargeResult = mockMvc.perform(post("/api/v1/users/" + userId + "/points")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(pointChargeRequest)))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            CreatePaymentResponse paymentResponse = objectMapper.readValue(
+                    objectMapper.readTree(pointChargeResult).path("data").toString(),
+                    CreatePaymentResponse.class
+            );
+            UUID orderId = paymentResponse.orderId();
+
+            // 3. 결제 콜백 호출 (GET /payments/toss/callback)
+            mockMvc.perform(get("/api/v1/payments/toss/callback")
+                            .param("paymentKey", "test-payment-key")
+                            .param("orderId", orderId.toString())
+                            .param("amount", "500"))
+                    .andExpect(status().isOk());
+
+            // 4. 포인트 충전 확정 (POST /users/{userId}/points/confirm)
+            PointChargeConfirmRequest confirmRequest = new PointChargeConfirmRequest(orderId);
+
+            mockMvc.perform(post("/api/v1/users/" + userId + "/points/confirm")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(confirmRequest)))
+                    .andExpect(status().isOk());
+
+            // 5. 다시 유저 조회해서 포인트 확인
+            mockMvc.perform(get("/api/v1/users/" + userId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.point").value(500));
+
+            // 6. 포인트 충전 재 요청 (POST /users/{userId}/points/confirm)
+            confirmRequest = new PointChargeConfirmRequest(orderId);
+
+            mockMvc.perform(post("/api/v1/users/" + userId + "/points/confirm")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(confirmRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Payment confirm already"));
+
+            // 7. 다시 유저 조회해서 포인트 확인
+            mockMvc.perform(get("/api/v1/users/" + userId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.point").value(500));
+        }
     }
+
 }
