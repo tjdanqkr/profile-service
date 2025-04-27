@@ -1,4 +1,4 @@
-package com.plus.profile.user.presentation.dto;
+package com.plus.profile.point.presentation.dto;
 
 import jakarta.validation.constraints.NotNull;
 

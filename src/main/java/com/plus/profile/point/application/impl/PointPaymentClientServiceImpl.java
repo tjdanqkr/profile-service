@@ -1,17 +1,16 @@
-package com.plus.profile.user.application.impl;
+package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.client.PaymentClientService;
 import com.plus.profile.global.dto.ConfirmPaymentRequest;
 import com.plus.profile.global.dto.ConfirmPaymentResponse;
 import com.plus.profile.global.dto.CreatePaymentRequest;
 import com.plus.profile.global.dto.CreatePaymentResponse;
-import com.plus.profile.user.application.UserPaymentClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentClientServiceImpl implements UserPaymentClientService {
+public class PointPaymentClientServiceImpl implements com.plus.profile.point.application.PointPaymentClientService {
     private final PaymentClientService paymentServiceImpl;
     @Override
     public CreatePaymentResponse createTransaction(CreatePaymentRequest request) {

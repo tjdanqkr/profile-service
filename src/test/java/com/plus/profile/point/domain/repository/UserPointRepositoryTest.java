@@ -1,7 +1,8 @@
-package com.plus.profile.user.domain.repository;
+package com.plus.profile.point.domain.repository;
 
 import com.plus.profile.user.domain.User;
-import com.plus.profile.user.domain.UserPoint;
+import com.plus.profile.point.domain.UserPoint;
+import com.plus.profile.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

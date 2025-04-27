@@ -1,8 +1,7 @@
-package com.plus.profile.user.application.impl;
+package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.dto.*;
 import com.plus.profile.payment.application.PaymentService;
-import com.plus.profile.user.application.UserPaymentClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,12 +17,12 @@ import static org.mockito.Mockito.*;
 class PaymentClientServiceImplTest {
 
     private PaymentService paymentService;
-    private UserPaymentClientService paymentClientService;
+    private com.plus.profile.point.application.PointPaymentClientService paymentClientService;
 
     @BeforeEach
     void setUp() {
         paymentService = mock(PaymentService.class);
-        paymentClientService = new PaymentClientServiceImpl(paymentService);
+        paymentClientService = new PointPaymentClientServiceImpl(paymentService);
     }
 
     @Test

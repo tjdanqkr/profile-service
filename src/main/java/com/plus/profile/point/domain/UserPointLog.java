@@ -1,5 +1,6 @@
-package com.plus.profile.user.domain;
+package com.plus.profile.point.domain;
 
+import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class UserPointLog {
+public class UserPointLog extends BaseTimeEntity {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="USER_POINTS_LOG_ID")
     private Long id;
@@ -34,7 +35,7 @@ public class UserPointLog {
     private UUID couponId;
     @Column(name="USER_COUPON_ID")
     private Long userCouponId;
-    @Column(name="COUPON_CODE", nullable = false)
+    @Column(name="COUPON_CODE")
     private String couponCode;
     @Column(name="COUPON_DESCRIPTION")
     private String couponDescription;

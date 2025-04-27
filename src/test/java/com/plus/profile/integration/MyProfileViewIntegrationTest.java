@@ -1,4 +1,4 @@
-package com.plus.profile.profile.integration;
+package com.plus.profile.integration;
 
 import com.plus.profile.profile.application.ProfileService;
 import com.plus.profile.profile.domain.MyProfile;

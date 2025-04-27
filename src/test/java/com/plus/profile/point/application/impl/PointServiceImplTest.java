@@ -1,16 +1,15 @@
-package com.plus.profile.user.application.impl;
+package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.dto.*;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.global.exception.GlobalServerException;
-import com.plus.profile.user.application.PointService;
-import com.plus.profile.user.application.UserPaymentClientService;
-import com.plus.profile.user.domain.UserPoint;
-import com.plus.profile.user.domain.UserPointLog;
-import com.plus.profile.user.domain.repository.UserPointLogRepository;
-import com.plus.profile.user.domain.repository.UserPointRepository;
+import com.plus.profile.point.application.PointPaymentClientService;
+import com.plus.profile.point.domain.UserPoint;
+import com.plus.profile.point.domain.UserPointLog;
+import com.plus.profile.point.domain.repository.UserPointLogRepository;
+import com.plus.profile.point.domain.repository.UserPointRepository;
 import com.plus.profile.user.exception.UserExceptionCode;
-import com.plus.profile.user.presentation.dto.PointChargeRequest;
+import com.plus.profile.point.presentation.dto.PointChargeRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PointServiceImplTest {
     @Mock
-    private UserPaymentClientService userPaymentClientService;
+    private PointPaymentClientService pointPaymentClientService;
     @Mock
     private UserPointRepository userPointRepository;
     @Mock
@@ -53,14 +52,14 @@ class PointServiceImplTest {
                 "TOSS"
         );
 
-        when(userPaymentClientService.createTransaction(any(CreatePaymentRequest.class)))
+        when(pointPaymentClientService.createTransaction(any(CreatePaymentRequest.class)))
                 .thenReturn(expectedResponse);
 
         // when
         CreatePaymentResponse actualResponse = pointService.chargePoint(userId, request);
 
         // then
-        verify(userPaymentClientService, times(1))
+        verify(pointPaymentClientService, times(1))
                 .createTransaction(any(CreatePaymentRequest.class));
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -80,7 +79,7 @@ class PointServiceImplTest {
                     .point(10000L)
                     .build();
 
-            when(userPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
+            when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
                     .thenReturn(new ConfirmPaymentResponse(userId, orderId, true, chargeAmount));
 
             when(userPointRepository.findByUserId(userId))
@@ -101,7 +100,7 @@ class PointServiceImplTest {
             UUID userId = UUID.randomUUID();
             UUID orderId = UUID.randomUUID();
 
-            when(userPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
+            when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
                     .thenReturn(new ConfirmPaymentResponse(userId, orderId, false, 0L));
 
             // when & then
@@ -120,7 +119,7 @@ class PointServiceImplTest {
             UUID userId = UUID.randomUUID();
             UUID orderId = UUID.randomUUID();
 
-            when(userPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
+            when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
                     .thenReturn(new ConfirmPaymentResponse(userId, orderId, true, 5000L));
 
             when(userPointRepository.findByUserId(userId))

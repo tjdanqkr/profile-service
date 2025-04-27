@@ -1,6 +1,6 @@
-package com.plus.profile.user.domain.repository;
+package com.plus.profile.point.domain.repository;
 
-import com.plus.profile.user.domain.UserPoint;
+import com.plus.profile.point.domain.UserPoint;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

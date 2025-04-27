@@ -11,9 +11,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilder.json;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PaymentCallbackController.class)
 class PaymentCallbackControllerTest {
@@ -40,8 +40,8 @@ class PaymentCallbackControllerTest {
                             .param("paymentKey", "samplePaymentKey")
                             .param("orderId", "sampleOrderId")
                             .param("amount", "10000"))
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/payments/toss/success?orderId=sampleOrderId"));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").value("/payments/toss/success?orderId=sampleOrderId"));
         }
 
         @Test
@@ -56,8 +56,8 @@ class PaymentCallbackControllerTest {
                             .param("paymentKey", "samplePaymentKey")
                             .param("orderId", "sampleOrderId")
                             .param("amount", "10000"))
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/payments/toss/fail"));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").value("/payments/toss/fail"));
         }
     }
 
@@ -76,8 +76,8 @@ class PaymentCallbackControllerTest {
             mockMvc.perform(get("/api/v1/payments/kakao/callback")
                             .param("pg_token", "samplePgToken")
                             .param("orderId", "sampleOrderId"))
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/payments/kakao/success?orderId=sampleOrderId"));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").value("/payments/kakao/success?orderId=sampleOrderId"));
         }
 
         @Test
@@ -91,8 +91,8 @@ class PaymentCallbackControllerTest {
             mockMvc.perform(get("/api/v1/payments/kakao/callback")
                             .param("pg_token", "samplePgToken")
                             .param("orderId", "sampleOrderId"))
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/payments/kakao/fail"));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").value("/payments/kakao/fail"));
         }
     }
 }

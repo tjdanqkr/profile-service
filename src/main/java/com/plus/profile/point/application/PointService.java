@@ -1,6 +1,6 @@
-package com.plus.profile.user.application;
+package com.plus.profile.point.application;
 
-import com.plus.profile.user.presentation.dto.PointChargeRequest;
+import com.plus.profile.point.presentation.dto.PointChargeRequest;
 import com.plus.profile.global.dto.CreatePaymentResponse;
 
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.plus.profile.user.domain;
+package com.plus.profile.point.domain;
 
 public enum UserPointLogType {
     CHARGE,         // 충전

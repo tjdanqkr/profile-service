@@ -1,4 +1,4 @@
-package com.plus.profile.user.application.impl;
+package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.dto.ConfirmPaymentRequest;
 import com.plus.profile.global.dto.ConfirmPaymentResponse;
@@ -6,17 +6,14 @@ import com.plus.profile.global.dto.CreatePaymentRequest;
 import com.plus.profile.global.dto.CreatePaymentResponse;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.global.exception.GlobalServerException;
-import com.plus.profile.payment.domain.PaymentTransaction;
-import com.plus.profile.payment.domain.PaymentTransactionStatusType;
-import com.plus.profile.payment.exception.PaymentExceptionCode;
-import com.plus.profile.user.application.PointService;
-import com.plus.profile.user.application.UserPaymentClientService;
-import com.plus.profile.user.domain.UserPoint;
-import com.plus.profile.user.domain.UserPointLog;
-import com.plus.profile.user.domain.repository.UserPointLogRepository;
-import com.plus.profile.user.domain.repository.UserPointRepository;
+import com.plus.profile.point.application.PointService;
+import com.plus.profile.point.application.PointPaymentClientService;
+import com.plus.profile.point.domain.UserPoint;
+import com.plus.profile.point.domain.UserPointLog;
+import com.plus.profile.point.domain.repository.UserPointLogRepository;
+import com.plus.profile.point.domain.repository.UserPointRepository;
 import com.plus.profile.user.exception.UserExceptionCode;
-import com.plus.profile.user.presentation.dto.PointChargeRequest;
+import com.plus.profile.point.presentation.dto.PointChargeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +23,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PointServiceImpl implements PointService {
-    private final UserPaymentClientService paymentService;
+    private final PointPaymentClientService paymentService;
     private final UserPointRepository userPointRepository;
     private final UserPointLogRepository userPointLogRepository;
     @Override

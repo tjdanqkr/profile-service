@@ -5,6 +5,8 @@ import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.domain.repository.ProfileViewRepository;
 import com.plus.profile.user.domain.User;
+import com.plus.profile.point.domain.UserPoint;
+import com.plus.profile.point.domain.repository.UserPointRepository;
 import com.plus.profile.user.domain.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class DataInitialize {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final ProfileViewRepository profileViewRepository;
+    private final UserPointRepository userPointRepository;
     private final Random random = new Random();
     private final String[] names = {
             "김민준", "이서준", "박예린", "최지우", "정하준",
@@ -69,6 +72,8 @@ public class DataInitialize {
                     .encodedPassword("password")
                     .build();
             users.add(user);
+            UserPoint point = UserPoint.builder().user(user).point(0L).build();
+            userPointRepository.save(point);
         }
         userRepository.saveAll(users);
         return users;

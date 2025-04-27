@@ -1,6 +1,8 @@
 package com.plus.profile.user.domain;
 
 import com.plus.profile.global.jpa.BaseTimeEntity;
+import com.plus.profile.point.domain.UserCoupon;
+import com.plus.profile.point.domain.UserPoint;
 import jakarta.persistence.*;
 import lombok.*;
 
