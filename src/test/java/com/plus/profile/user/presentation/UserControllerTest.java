@@ -1,6 +1,7 @@
 package com.plus.profile.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.plus.profile.global.dto.CreatePaymentResponse;
 import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.exception.BusinessException;
@@ -13,6 +14,7 @@ import com.plus.profile.user.presentation.dto.UserDetailResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -34,7 +36,6 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
-
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -83,5 +84,6 @@ class UserControllerTest {
                     .andExpect(jsonPath("$.message").value("User not found"));
         }
     }
+
 
 }

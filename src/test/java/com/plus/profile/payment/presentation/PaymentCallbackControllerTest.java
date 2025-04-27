@@ -15,6 +15,7 @@ import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilde
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(PaymentCallbackController.class)
 class PaymentCallbackControllerTest {
 
@@ -42,6 +43,7 @@ class PaymentCallbackControllerTest {
                             .param("amount", "10000"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value("/payments/toss/success?orderId=sampleOrderId"));
+
         }
 
         @Test
@@ -58,6 +60,7 @@ class PaymentCallbackControllerTest {
                             .param("amount", "10000"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value("/payments/toss/fail"));
+
         }
     }
 
@@ -78,6 +81,7 @@ class PaymentCallbackControllerTest {
                             .param("orderId", "sampleOrderId"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value("/payments/kakao/success?orderId=sampleOrderId"));
+
         }
 
         @Test
@@ -93,6 +97,7 @@ class PaymentCallbackControllerTest {
                             .param("orderId", "sampleOrderId"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value("/payments/kakao/fail"));
+
         }
     }
 }

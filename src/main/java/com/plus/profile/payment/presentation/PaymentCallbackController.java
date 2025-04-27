@@ -1,5 +1,6 @@
 package com.plus.profile.payment.presentation;
 
+
 import com.plus.profile.global.dto.ApiResponse;
 import com.plus.profile.payment.application.PaymentCallbackService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ public class PaymentCallbackController {
             HttpServletResponse response
     ) throws IOException {
         boolean result = paymentService.confirmTossPayment(paymentKey, orderId, amount);
+
 //        response.sendRedirect(result ? String.format("/payments/toss/success?orderId=%s", orderId) : "/payments/toss/fail");
         return ApiResponse.success(result ? String.format("/payments/toss/success?orderId=%s", orderId) : "/payments/toss/fail");
     }

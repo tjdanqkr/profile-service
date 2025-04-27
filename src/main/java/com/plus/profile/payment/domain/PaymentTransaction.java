@@ -52,6 +52,7 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Column(name = "PAYMENT_CONFIRM_STATUS", nullable = false)
     private PaymentConfirmStatus paymentConfirmStatus = PaymentConfirmStatus.PAYMENT_WAITING;
 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "PG_TYPE", nullable = false)
     private PayGatewayCompany pgType;
@@ -86,6 +87,7 @@ public class PaymentTransaction extends BaseTimeEntity {
     public void confirm(){
         this.paymentConfirmStatus = PaymentConfirmStatus.CONFIRMED;
     }
+
 
     public void failPayment() {
         this.transactionStatus = PaymentTransactionStatusType.FAILED;

@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 import static com.plus.profile.point.domain.QUserCoupon.userCoupon;
 import static com.plus.profile.point.domain.QUserPoint.userPoint;
 import static com.plus.profile.user.domain.QUser.user;
+
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {

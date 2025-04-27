@@ -37,6 +37,7 @@ class PaymentServiceImplTest {
     private PaymentTossClient paymentTossClient;
 
     private UUID orderId;
+
     private UUID userId;
     private PaymentTransaction transaction;
     @BeforeEach
@@ -280,4 +281,5 @@ class PaymentServiceImplTest {
             assertThat(response.transactionAmount()).isEqualTo(5000L);
         }
     }
+
 }
