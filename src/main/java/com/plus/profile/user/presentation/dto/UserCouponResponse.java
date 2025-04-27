@@ -1,6 +1,7 @@
 package com.plus.profile.user.presentation.dto;
 
-import com.plus.profile.user.domain.UserCoupon;
+
+import com.plus.profile.point.domain.UserCoupon;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 

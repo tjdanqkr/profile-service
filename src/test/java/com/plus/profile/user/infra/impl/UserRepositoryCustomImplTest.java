@@ -1,8 +1,8 @@
 package com.plus.profile.user.infra.impl;
 
 import com.plus.profile.user.domain.User;
-import com.plus.profile.user.domain.UserCoupon;
-import com.plus.profile.user.domain.UserPoint;
+import com.plus.profile.point.domain.UserCoupon;
+import com.plus.profile.point.domain.UserPoint;
 import com.plus.profile.user.domain.UserRole;
 import com.plus.profile.user.presentation.dto.UserDetailResponse;
 import jakarta.persistence.EntityManager;

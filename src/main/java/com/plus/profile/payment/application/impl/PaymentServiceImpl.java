@@ -6,6 +6,8 @@ import com.plus.profile.payment.application.PaymentCallbackService;
 import com.plus.profile.payment.application.PaymentKakaoClient;
 import com.plus.profile.payment.application.PaymentService;
 import com.plus.profile.payment.application.PaymentTossClient;
+
+import com.plus.profile.payment.domain.PaymentConfirmStatus;
 import com.plus.profile.payment.domain.PaymentTransaction;
 import com.plus.profile.payment.domain.PaymentTransactionStatusType;
 import com.plus.profile.payment.domain.repository.PaymentCancellationRepository;
@@ -86,15 +88,18 @@ public class PaymentServiceImpl implements PaymentService, PaymentCallbackServic
     @Override
     public ConfirmPaymentResponse confirmPointCharge(ConfirmPaymentRequest request) {
         Optional<PaymentTransaction> byOrderId = paymentTransactionRepository.findByOrderIdAndUserId(request.orderId(), request.userId());
-        if(byOrderId.isEmpty()) return new ConfirmPaymentResponse(request.userId(), request.orderId(), false, 0L);
+
+        if(byOrderId.isEmpty()) return new ConfirmPaymentResponse(request.userId(), request.orderId(), ConfirmPaymentResult.NOT_FOUND, 0L);
         PaymentTransaction transaction = byOrderId.get();
         if(!transaction.getTransactionStatus().equals(PaymentTransactionStatusType.COMPLETED))
-            return new ConfirmPaymentResponse(request.userId(), request.orderId(), false, 0L);
-
+            return new ConfirmPaymentResponse(request.userId(), request.orderId(), ConfirmPaymentResult.PENDING, 0L);
+        if(transaction.getPaymentConfirmStatus().equals(PaymentConfirmStatus.CONFIRMED))
+            return new ConfirmPaymentResponse(request.userId(), request.orderId(), ConfirmPaymentResult.ALREADY_PROCESSED, 0L);
         return new ConfirmPaymentResponse(
                 request.userId(),
                 transaction.getOrderId(),
-                true,
+                ConfirmPaymentResult.SUCCESS,
+
                 transaction.getTransactionAmount()
         );
     }

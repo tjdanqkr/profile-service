@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum GlobalServerException implements BaseExceptionCode {
-    PAYMENT_CONFIRM_FAIL(400, "Payment confirm failed"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
     private final int statusCode;

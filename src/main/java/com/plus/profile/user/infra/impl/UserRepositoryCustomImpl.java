@@ -13,9 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
+import static com.plus.profile.point.domain.QUserCoupon.userCoupon;
+import static com.plus.profile.point.domain.QUserPoint.userPoint;
 import static com.plus.profile.user.domain.QUser.user;
-import static com.plus.profile.user.domain.QUserCoupon.userCoupon;
-import static com.plus.profile.user.domain.QUserPoint.userPoint;
 
 @Repository
 @RequiredArgsConstructor
