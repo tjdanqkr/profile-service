@@ -4,5 +4,5 @@ import java.util.UUID;
 
 
 public record CreatePaymentRequest
-        (UUID userId, long amount, PayGatewayCompany pgType) {
+        (UUID userId, long amount, PayGatewayCompany pgType, String supportKey) {
 }

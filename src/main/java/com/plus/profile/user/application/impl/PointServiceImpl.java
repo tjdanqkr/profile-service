@@ -18,7 +18,7 @@ public class PointServiceImpl implements PointService {
     private final UserPointRepository userPointRepository;
     @Override
     public CreatePaymentResponse chargePoint(UUID userId, PointChargeRequest request) {
-        CreatePaymentRequest paymentRequest = new CreatePaymentRequest(userId, request.getAmount(), request.getPgType());
+        CreatePaymentRequest paymentRequest = new CreatePaymentRequest(userId, request.amount(), request.pgType(), request.supportKey());
         return paymentService.createTransaction(paymentRequest);
     }
 }

@@ -3,10 +3,13 @@ package com.plus.profile.payment.application.impl;
 import com.plus.profile.global.dto.CreatePaymentRequest;
 import com.plus.profile.global.dto.CreatePaymentResponse;
 import com.plus.profile.global.dto.PayGatewayCompany;
+import com.plus.profile.payment.application.PaymentKakaoClient;
+import com.plus.profile.payment.application.PaymentTossClient;
 import com.plus.profile.payment.domain.PaymentTransaction;
 import com.plus.profile.payment.domain.PaymentTransactionStatusType;
 import com.plus.profile.payment.domain.repository.PaymentCancellationRepository;
 import com.plus.profile.payment.domain.repository.PaymentTransactionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +32,25 @@ class PaymentServiceImplTest {
     private PaymentCancellationRepository paymentCancellationRepository;
     @InjectMocks
     private PaymentServiceImpl paymentService;
+    @Mock
+    private PaymentKakaoClient paymentKakaoClient;
+    @Mock
+    private PaymentTossClient paymentTossClient;
 
+    private UUID orderId;
+    private PaymentTransaction transaction;
+    @BeforeEach
+    void setUp(){
+        orderId = UUID.randomUUID();
+        transaction = PaymentTransaction.builder()
+                .userId(UUID.randomUUID())
+                .orderId(orderId)
+                .orderName("테스트 주문")
+                .transactionAmount(1000L)
+                .transactionStatus(PaymentTransactionStatusType.PENDING)
+                .pgType(PayGatewayCompany.TOSS)
+                .build();
+    }
 
 
     @Nested
@@ -42,7 +64,8 @@ class PaymentServiceImplTest {
             CreatePaymentRequest request = new CreatePaymentRequest(
                     UUID.randomUUID(),
                     5000L,
-                    PayGatewayCompany.TOSS
+                    PayGatewayCompany.TOSS,
+                    "test-support-key"
             );
 
             PaymentTransaction transaction = PaymentTransaction.builder()
@@ -68,6 +91,109 @@ class PaymentServiceImplTest {
             assertThat(response.pgType()).isEqualTo(PayGatewayCompany.TOSS.name());
             verify(paymentTransactionRepository, times(1)).save(any(PaymentTransaction.class));
 
+        }
+    }
+    @Nested
+    @DisplayName("Toss 결제 승인 테스트")
+    class TossConfirmTest {
+
+        @Test
+        @DisplayName("Toss 결제 승인 성공")
+        void confirmTossPaymentSuccess() throws Exception {
+            // given
+            PaymentTransaction transaction = PaymentTransaction.builder()
+                    .userId(UUID.randomUUID())
+                    .orderId(orderId)
+                    .orderName("테스트 주문")
+                    .transactionAmount(1000L)
+                    .transactionStatus(PaymentTransactionStatusType.PENDING)
+                    .pgType(PayGatewayCompany.TOSS)
+                    .build();
+            when(paymentTransactionRepository.findByOrderId(orderId)).thenReturn(Optional.of(transaction));
+            when(paymentTossClient.approve(anyString(), anyString())).thenReturn(anyString());
+
+            // when
+            boolean result = paymentService.confirmTossPayment("paymentKey", orderId.toString(), "1000");
+
+            // then
+            assertThat(result).isTrue();
+            assertThat(transaction.getTransactionStatus()).isEqualTo(PaymentTransactionStatusType.COMPLETED);
+        }
+
+        @Test
+        @DisplayName("Toss 결제 승인 실패")
+        void confirmTossPaymentFail() throws Exception {
+            // given
+            PaymentTransaction transaction = PaymentTransaction.builder()
+                    .userId(UUID.randomUUID())
+                    .orderId(orderId)
+                    .orderName("테스트 주문")
+                    .transactionAmount(1000L)
+                    .transactionStatus(PaymentTransactionStatusType.PENDING)
+                    .pgType(PayGatewayCompany.TOSS)
+                    .build();
+            when(paymentTransactionRepository.findByOrderId(orderId)).thenReturn(Optional.of(transaction));
+            when(paymentTossClient.approve(anyString(), anyString())).thenThrow(new RuntimeException("승인 실패"));
+
+            // when
+            boolean result = paymentService.confirmTossPayment("paymentKey", orderId.toString(), "1000");
+
+            // then
+            assertThat(result).isFalse();
+            assertThat(transaction.getTransactionStatus()).isEqualTo(PaymentTransactionStatusType.FAILED);
+        }
+    }
+
+    @Nested
+    @DisplayName("Kakao 결제 승인 테스트")
+    class KakaoConfirmTest {
+
+        @Test
+        @DisplayName("Kakao 결제 승인 성공")
+        void confirmKakaoPaymentSuccess() throws Exception {
+            // given
+            PaymentTransaction transaction = PaymentTransaction.builder()
+                    .userId(UUID.randomUUID())
+                    .orderId(orderId)
+                    .orderName("테스트 주문")
+                    .transactionAmount(1000L)
+                    .transactionStatus(PaymentTransactionStatusType.PENDING)
+                    .pgType(PayGatewayCompany.KAKAO)
+                    .pgSupportKey("test-support-key")
+                    .build();
+            when(paymentTransactionRepository.findByOrderId(orderId)).thenReturn(Optional.of(transaction));
+            when(paymentKakaoClient.approve(anyString(), anyString(), anyString())).thenReturn(anyString());
+
+            // when
+            boolean result = paymentService.confirmKakaoPayment("pg_token", orderId.toString());
+
+            // then
+            assertThat(result).isTrue();
+            assertThat(transaction.getTransactionStatus()).isEqualTo(PaymentTransactionStatusType.COMPLETED);
+        }
+
+        @Test
+        @DisplayName("Kakao 결제 승인 실패")
+        void confirmKakaoPaymentFail() throws Exception {
+            // given
+            PaymentTransaction transaction = PaymentTransaction.builder()
+                    .userId(UUID.randomUUID())
+                    .orderId(orderId)
+                    .orderName("테스트 주문")
+                    .transactionAmount(1000L)
+                    .transactionStatus(PaymentTransactionStatusType.PENDING)
+                    .pgType(PayGatewayCompany.KAKAO)
+                    .pgSupportKey("test-support-key")
+                    .build();
+            when(paymentTransactionRepository.findByOrderId(orderId)).thenReturn(Optional.of(transaction));
+            when(paymentKakaoClient.approve(anyString(), anyString(), anyString())).thenThrow(new RuntimeException("승인 실패"));
+
+            // when
+            boolean result = paymentService.confirmKakaoPayment("pg_token", orderId.toString());
+
+            // then
+            assertThat(result).isFalse();
+            assertThat(transaction.getTransactionStatus()).isEqualTo(PaymentTransactionStatusType.FAILED);
         }
     }
 }

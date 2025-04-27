@@ -33,7 +33,7 @@ class PointServiceImplTest {
     void shouldChargePointSuccessfully() {
         // given
         UUID userId = UUID.randomUUID();
-        PointChargeRequest request = new PointChargeRequest(5000L, PayGatewayCompany.TOSS);
+        PointChargeRequest request = new PointChargeRequest(5000L, PayGatewayCompany.TOSS, "test-support-key");
 
         CreatePaymentResponse expectedResponse = new CreatePaymentResponse(
                 UUID.randomUUID(),

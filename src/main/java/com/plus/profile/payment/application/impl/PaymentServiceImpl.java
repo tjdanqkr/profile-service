@@ -2,25 +2,33 @@ package com.plus.profile.payment.application.impl;
 
 import com.plus.profile.global.dto.CreatePaymentRequest;
 import com.plus.profile.global.dto.CreatePaymentResponse;
+import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.exception.BusinessException;
+import com.plus.profile.payment.application.PaymentCallbackService;
+import com.plus.profile.payment.application.PaymentKakaoClient;
 import com.plus.profile.payment.application.PaymentService;
+import com.plus.profile.payment.application.PaymentTossClient;
 import com.plus.profile.payment.domain.PaymentTransaction;
 import com.plus.profile.payment.domain.PaymentTransactionStatusType;
 import com.plus.profile.payment.domain.repository.PaymentCancellationRepository;
 import com.plus.profile.payment.domain.repository.PaymentTransactionRepository;
 import com.plus.profile.payment.exception.PaymentExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentServiceImpl implements PaymentService, PaymentCallbackService {
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final PaymentCancellationRepository paymentCancellationRepository;
+    private final PaymentKakaoClient paymentKakaoClient;
+    private final PaymentTossClient paymentTossClient;
 
     @Override
     public CreatePaymentResponse createTransaction(CreatePaymentRequest request) {
@@ -31,6 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .transactionAmount(request.amount())
                 .transactionStatus(PaymentTransactionStatusType.PENDING)
                 .pgType(request.pgType())
+                .pgSupportKey(request.pgType() != PayGatewayCompany.TOSS ? request.supportKey() : "")
                 .build();
         paymentTransactionRepository.save(transaction);
         return new CreatePaymentResponse(
@@ -42,5 +51,36 @@ public class PaymentServiceImpl implements PaymentService {
         );
     }
 
+    @Override
+    public boolean confirmTossPayment(String paymentKey, String orderId, String amount) {
+        PaymentTransaction transaction = paymentTransactionRepository.findByOrderId(UUID.fromString(orderId))
+                .orElseThrow(() -> new BusinessException(PaymentExceptionCode.PAYMENT_NOT_FOUND));
 
+        try {
+            String response = paymentTossClient.approve(paymentKey, orderId);
+            transaction.completePayment(response);
+            return true;
+        }catch (Exception e) {
+            log.error("[TOSS 결제 승인 실패]", e);
+            transaction.failPayment();
+        }
+        return false;
+
+    }
+
+
+    @Override
+    public boolean confirmKakaoPayment(String pgToken, String orderId) {
+        PaymentTransaction transaction = paymentTransactionRepository.findByOrderId(UUID.fromString(orderId))
+                .orElseThrow(() -> new BusinessException(PaymentExceptionCode.PAYMENT_NOT_FOUND));
+        try {
+            String response = paymentKakaoClient.approve(pgToken, orderId, transaction.getPgSupportKey());
+            transaction.completePayment(response);
+            return true;
+        } catch (Exception e) {
+            log.error("[KAKAO 결제 승인 실패]", e);
+            transaction.failPayment();
+        }
+        return false;
+    }
 }

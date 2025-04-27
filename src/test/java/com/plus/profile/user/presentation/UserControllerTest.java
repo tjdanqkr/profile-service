@@ -2,9 +2,13 @@ package com.plus.profile.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plus.profile.global.dto.ApiResponse;
+import com.plus.profile.global.dto.CreatePaymentResponse;
+import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.exception.BusinessException;
+import com.plus.profile.user.application.PointService;
 import com.plus.profile.user.application.UserService;
 import com.plus.profile.user.exception.UserExceptionCode;
+import com.plus.profile.user.presentation.dto.PointChargeRequest;
 import com.plus.profile.user.presentation.dto.UserDetailResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,8 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+    @MockitoBean
+    private PointService pointService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -78,6 +85,51 @@ class UserControllerTest {
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.success").value(false))
                     .andExpect(jsonPath("$.message").value("User not found"));
+        }
+    }
+    @Nested
+    @DisplayName("포인트 충전 API 테스트")
+    class ChargePoint {
+
+        @Test
+        @DisplayName("포인트 충전 성공")
+        void shouldChargePoint() throws Exception {
+            // given
+            UUID userId = UUID.randomUUID();
+            PointChargeRequest request = new PointChargeRequest(1000L, PayGatewayCompany.TOSS, "test-support-key");
+
+            CreatePaymentResponse response = new CreatePaymentResponse(
+                    UUID.randomUUID(),
+                    "[포인트 충전] 1000 포인트 충전합니다.",
+                    1000L,
+                    "PENDING",
+                    "TOSS"
+            );
+
+            when(pointService.chargePoint(any(UUID.class), any(PointChargeRequest.class)))
+                    .thenReturn(response);
+
+            // when & then
+            mockMvc.perform(post("/api/v1/users/{userId}/points", userId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.transactionAmount").value(1000L))
+                    .andExpect(jsonPath("$.data.pgType").value("TOSS"));
+        }
+
+        @Test
+        @DisplayName("포인트 충전 실패 - 최소 금액 미만")
+        void shouldFailChargePointWhenAmountIsTooSmall() throws Exception {
+            // given
+            UUID userId = UUID.randomUUID();
+            PointChargeRequest request = new PointChargeRequest(50L, PayGatewayCompany.TOSS,"test-support-key"); // 100 미만
+
+            // when & then
+            mockMvc.perform(post("/api/v1/users/{userId}/points", userId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest());
         }
     }
 }

@@ -35,7 +35,8 @@ class PaymentClientServiceImplTest {
         CreatePaymentRequest request = new CreatePaymentRequest(
                 UUID.randomUUID(),
                 5000L,
-                PayGatewayCompany.TOSS
+                PayGatewayCompany.TOSS,
+                "test-support-key"
         );
 
         CreatePaymentResponse expectedResponse = new CreatePaymentResponse(

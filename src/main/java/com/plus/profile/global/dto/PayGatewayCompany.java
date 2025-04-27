@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Getter
 public enum PayGatewayCompany {
     TOSS("https://api.tosspayments.com/v1/payments/{orderId}", RequestMethod.GET, "paymentKey"),
-    KAKAO_PAY("https://kapi.kakao.com/v1/payment/order", RequestMethod.POST, "cid"),
+    KAKAO("https://kapi.kakao.com/v1/payment/order", RequestMethod.POST, "cid"),
     OTHER("https://test.com/v1/payments", RequestMethod.POST, "cid");
 
     private final String successUrl;

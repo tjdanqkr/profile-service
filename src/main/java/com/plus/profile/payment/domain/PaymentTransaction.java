@@ -50,6 +50,9 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Column(name = "PG_TYPE", nullable = false)
     private PayGatewayCompany pgType;
 
+    @Column(name= "PG_SUPPORT_KEY")
+    private String pgSupportKey;
+
     @Column(name = "RECEIPT_URL")
     private String receiptUrl;
 
@@ -65,9 +68,16 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Builder.Default
     private boolean isCanceled = false;
 
-    @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL)
     private PaymentCancellation paymentCancellation;
 
+    public void completePayment(String paymentResponse) {
+        this.paymentResponse = paymentResponse;
+        this.transactionStatus = PaymentTransactionStatusType.COMPLETED;
+    }
+    public void failPayment() {
+        this.transactionStatus = PaymentTransactionStatusType.FAILED;
+    }
 
 }
 
