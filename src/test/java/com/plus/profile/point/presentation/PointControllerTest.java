@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plus.profile.global.dto.CreatePaymentResponse;
 import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.exception.BusinessException;
+import com.plus.profile.global.exception.GlobalPaymentException;
 import com.plus.profile.global.exception.GlobalServerException;
 import com.plus.profile.point.application.PointService;
 import com.plus.profile.point.presentation.dto.PointChargeConfirmRequest;
@@ -115,7 +116,7 @@ class PointControllerTest {
             UUID userId = UUID.randomUUID();
             UUID orderId = UUID.randomUUID();
 
-            doThrow(new BusinessException(GlobalServerException.PAYMENT_CONFIRM_FAIL))
+            doThrow(new BusinessException(GlobalPaymentException.PAYMENT_CONFIRM_FAIL))
                     .when(pointService)
                     .confirmPointCharge(userId, orderId);
 

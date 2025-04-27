@@ -15,7 +15,8 @@ import java.util.UUID;
                 @Index(name = "IDX_PAYMENT_TRANSACTION_CREATED_AT", columnList = "CREATED_AT"),
                 @Index(name = "IDX_PAYMENT_TRANSACTION_ORDER_ID", columnList = "ORDER_ID"),
                 @Index(name = "IDX_PAYMENT_TRANSACTION_TRANSACTION_STATUS", columnList = "TRANSACTION_STATUS"),
-                @Index(name = "IDX_PAYMENT_TRANSACTION_PG_TYPE", columnList = "PG_TYPE")
+                @Index(name = "IDX_PAYMENT_TRANSACTION_PG_TYPE", columnList = "PG_TYPE"),
+                @Index(name = "IDX_PAYMENT_TRANSACTION_PAYMENT_CONFIRM_STATUS", columnList = "PAYMENT_CONFIRM_STATUS")
         })
 @Getter
 @Builder
@@ -46,6 +47,11 @@ public class PaymentTransaction extends BaseTimeEntity {
     @Column(name = "TRANSACTION_STATUS", nullable = false)
     private PaymentTransactionStatusType transactionStatus;
 
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PAYMENT_CONFIRM_STATUS", nullable = false)
+    private PaymentConfirmStatus paymentConfirmStatus = PaymentConfirmStatus.PAYMENT_WAITING;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "PG_TYPE", nullable = false)
     private PayGatewayCompany pgType;
@@ -74,7 +80,13 @@ public class PaymentTransaction extends BaseTimeEntity {
     public void completePayment(String paymentResponse) {
         this.paymentResponse = paymentResponse;
         this.transactionStatus = PaymentTransactionStatusType.COMPLETED;
+        this.paymentConfirmStatus = PaymentConfirmStatus.PENDING;
     }
+
+    public void confirm(){
+        this.paymentConfirmStatus = PaymentConfirmStatus.CONFIRMED;
+    }
+
     public void failPayment() {
         this.transactionStatus = PaymentTransactionStatusType.FAILED;
     }

@@ -2,6 +2,7 @@ package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.dto.*;
 import com.plus.profile.global.exception.BusinessException;
+import com.plus.profile.global.exception.GlobalPaymentException;
 import com.plus.profile.global.exception.GlobalServerException;
 import com.plus.profile.point.application.PointPaymentClientService;
 import com.plus.profile.point.domain.UserPoint;
@@ -80,7 +81,7 @@ class PointServiceImplTest {
                     .build();
 
             when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
-                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, true, chargeAmount));
+                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, ConfirmPaymentResult.SUCCESS, chargeAmount));
 
             when(userPointRepository.findByUserId(userId))
                     .thenReturn(Optional.of(userPoint));
@@ -101,12 +102,48 @@ class PointServiceImplTest {
             UUID orderId = UUID.randomUUID();
 
             when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
-                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, false, 0L));
+                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, ConfirmPaymentResult.PENDING, 0L));
 
             // when & then
             assertThatThrownBy(() -> pointService.confirmPointCharge(userId, orderId))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(GlobalServerException.PAYMENT_CONFIRM_FAIL.getMessage());
+                    .hasMessage(GlobalPaymentException.PAYMENT_CONFIRM_PENDING.getMessage());
+
+            verify(userPointRepository, never()).findByUserId(any());
+            verify(userPointLogRepository, never()).save(any());
+        }
+        @Test
+        @DisplayName("포인트 충전 확정 실패 - 결제 못 찾음")
+        void confirmPointChargeFailWhenPaymentNotFound() {
+            // given
+            UUID userId = UUID.randomUUID();
+            UUID orderId = UUID.randomUUID();
+
+            when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
+                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, ConfirmPaymentResult.NOT_FOUND, 0L));
+
+            // when & then
+            assertThatThrownBy(() -> pointService.confirmPointCharge(userId, orderId))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(GlobalPaymentException.PAYMENT_CONFIRM_NOT_FOUND.getMessage());
+
+            verify(userPointRepository, never()).findByUserId(any());
+            verify(userPointLogRepository, never()).save(any());
+        }
+        @Test
+        @DisplayName("포인트 충전 확정 실패 - 이미 처리됨")
+        void confirmPointChargeFailWhenPaymentAlready() {
+            // given
+            UUID userId = UUID.randomUUID();
+            UUID orderId = UUID.randomUUID();
+
+            when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
+                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, ConfirmPaymentResult.ALREADY_PROCESSED, 0L));
+
+            // when & then
+            assertThatThrownBy(() -> pointService.confirmPointCharge(userId, orderId))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(GlobalPaymentException.PAYMENT_CONFIRM_ALREADY.getMessage());
 
             verify(userPointRepository, never()).findByUserId(any());
             verify(userPointLogRepository, never()).save(any());
@@ -120,7 +157,7 @@ class PointServiceImplTest {
             UUID orderId = UUID.randomUUID();
 
             when(pointPaymentClientService.confirmPointCharge(any(ConfirmPaymentRequest.class)))
-                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, true, 5000L));
+                    .thenReturn(new ConfirmPaymentResponse(userId, orderId, ConfirmPaymentResult.SUCCESS, 5000L));
 
             when(userPointRepository.findByUserId(userId))
                     .thenReturn(Optional.empty());

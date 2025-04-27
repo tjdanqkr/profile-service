@@ -1,10 +1,9 @@
 package com.plus.profile.payment.application.impl;
 
-import com.plus.profile.global.dto.CreatePaymentRequest;
-import com.plus.profile.global.dto.CreatePaymentResponse;
-import com.plus.profile.global.dto.PayGatewayCompany;
+import com.plus.profile.global.dto.*;
 import com.plus.profile.payment.application.PaymentKakaoClient;
 import com.plus.profile.payment.application.PaymentTossClient;
+import com.plus.profile.payment.domain.PaymentConfirmStatus;
 import com.plus.profile.payment.domain.PaymentTransaction;
 import com.plus.profile.payment.domain.PaymentTransactionStatusType;
 import com.plus.profile.payment.domain.repository.PaymentCancellationRepository;
@@ -38,9 +37,11 @@ class PaymentServiceImplTest {
     private PaymentTossClient paymentTossClient;
 
     private UUID orderId;
+    private UUID userId;
     private PaymentTransaction transaction;
     @BeforeEach
     void setUp(){
+        userId = UUID.randomUUID();
         orderId = UUID.randomUUID();
         transaction = PaymentTransaction.builder()
                 .userId(UUID.randomUUID())
@@ -194,6 +195,89 @@ class PaymentServiceImplTest {
             // then
             assertThat(result).isFalse();
             assertThat(transaction.getTransactionStatus()).isEqualTo(PaymentTransactionStatusType.FAILED);
+        }
+    }
+    @Nested
+    @DisplayName("confirmPointCharge 메서드 테스트")
+    class ConfirmPointChargeTest {
+
+        @Test
+        @DisplayName("거래가 존재하지 않으면 NOT_FOUND 반환")
+        void shouldReturnNotFound() {
+            // given
+            when(paymentTransactionRepository.findByOrderIdAndUserId(orderId, userId))
+                    .thenReturn(Optional.empty());
+
+            // when
+            ConfirmPaymentResponse response = paymentService.confirmPointCharge(new ConfirmPaymentRequest(userId, orderId));
+
+            // then
+            assertThat(response.status()).isEqualTo(ConfirmPaymentResult.NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("거래가 존재하지만 상태가 COMPLETED가 아니면 PENDING 반환")
+        void shouldReturnPendingIfNotCompleted() {
+            // given
+            PaymentTransaction pendingTransaction = PaymentTransaction.builder()
+                    .orderId(orderId)
+                    .userId(userId)
+                    .transactionStatus(PaymentTransactionStatusType.PENDING)
+                    .build();
+
+            when(paymentTransactionRepository.findByOrderIdAndUserId(orderId, userId))
+                    .thenReturn(Optional.of(pendingTransaction));
+
+            // when
+            ConfirmPaymentResponse response = paymentService.confirmPointCharge(new ConfirmPaymentRequest(userId, orderId));
+
+            // then
+            assertThat(response.status()).isEqualTo(ConfirmPaymentResult.PENDING);
+        }
+
+        @Test
+        @DisplayName("결제 완료되었지만 이미 포인트 반영된 경우 ALREADY_PROCESSED 반환")
+        void shouldReturnAlreadyProcessedIfConfirmed() {
+
+            // given
+            PaymentTransaction confirmedTransaction = PaymentTransaction.builder()
+                    .orderId(orderId)
+                    .userId(userId)
+                    .transactionStatus(PaymentTransactionStatusType.COMPLETED)
+                    .paymentConfirmStatus(PaymentConfirmStatus.CONFIRMED)
+                    .build();
+
+            when(paymentTransactionRepository.findByOrderIdAndUserId(orderId, userId))
+                    .thenReturn(Optional.of(confirmedTransaction));
+
+            // when
+            ConfirmPaymentResponse response = paymentService.confirmPointCharge(new ConfirmPaymentRequest(userId, orderId));
+
+            // then
+            assertThat(response.status()).isEqualTo(ConfirmPaymentResult.ALREADY_PROCESSED);
+        }
+
+        @Test
+        @DisplayName("정상 결제 완료 상태이면 SUCCESS 반환")
+        void shouldReturnSuccess() {
+            // given
+            PaymentTransaction completedTransaction = PaymentTransaction.builder()
+                    .orderId(orderId)
+                    .userId(userId)
+                    .transactionStatus(PaymentTransactionStatusType.COMPLETED)
+                    .paymentConfirmStatus(PaymentConfirmStatus.PENDING)
+                    .transactionAmount(5000L)
+                    .build();
+
+            when(paymentTransactionRepository.findByOrderIdAndUserId(orderId, userId))
+                    .thenReturn(Optional.of(completedTransaction));
+
+            // when
+            ConfirmPaymentResponse response = paymentService.confirmPointCharge(new ConfirmPaymentRequest(userId, orderId));
+
+            // then
+            assertThat(response.status()).isEqualTo(ConfirmPaymentResult.SUCCESS);
+            assertThat(response.transactionAmount()).isEqualTo(5000L);
         }
     }
 }

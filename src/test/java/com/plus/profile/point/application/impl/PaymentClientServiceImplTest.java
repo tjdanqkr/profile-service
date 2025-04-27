@@ -61,7 +61,7 @@ class PaymentClientServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID orderId = UUID.randomUUID();
         ConfirmPaymentRequest request = new ConfirmPaymentRequest(userId, orderId);
-        ConfirmPaymentResponse expectedResponse = new ConfirmPaymentResponse(userId, orderId, true, 5000L);
+        ConfirmPaymentResponse expectedResponse = new ConfirmPaymentResponse(userId, orderId, ConfirmPaymentResult.SUCCESS, 5000L);
 
         when(paymentService.confirmPointCharge(request)).thenReturn(expectedResponse);
 

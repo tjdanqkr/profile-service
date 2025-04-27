@@ -1,10 +1,8 @@
 package com.plus.profile.point.application.impl;
 
-import com.plus.profile.global.dto.ConfirmPaymentRequest;
-import com.plus.profile.global.dto.ConfirmPaymentResponse;
-import com.plus.profile.global.dto.CreatePaymentRequest;
-import com.plus.profile.global.dto.CreatePaymentResponse;
+import com.plus.profile.global.dto.*;
 import com.plus.profile.global.exception.BusinessException;
+import com.plus.profile.global.exception.GlobalPaymentException;
 import com.plus.profile.global.exception.GlobalServerException;
 import com.plus.profile.point.application.PointService;
 import com.plus.profile.point.application.PointPaymentClientService;
@@ -15,11 +13,13 @@ import com.plus.profile.point.domain.repository.UserPointRepository;
 import com.plus.profile.user.exception.UserExceptionCode;
 import com.plus.profile.point.presentation.dto.PointChargeRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PointServiceImpl implements PointService {
@@ -36,9 +36,15 @@ public class PointServiceImpl implements PointService {
     @Transactional
     public void confirmPointCharge(UUID userId, UUID orderId) {
         ConfirmPaymentResponse response = paymentService.confirmPointCharge(new ConfirmPaymentRequest(userId, orderId));
-        if (!response.isSuccess()) {
-            throw new BusinessException(GlobalServerException.PAYMENT_CONFIRM_FAIL);
-        }
+        if (response.status().equals(ConfirmPaymentResult.NOT_FOUND))
+            throw new BusinessException(GlobalPaymentException.PAYMENT_CONFIRM_NOT_FOUND);
+
+        if (response.status().equals(ConfirmPaymentResult.PENDING))
+            throw new BusinessException(GlobalPaymentException.PAYMENT_CONFIRM_PENDING);
+
+        if (response.status().equals(ConfirmPaymentResult.ALREADY_PROCESSED))
+            throw new BusinessException(GlobalPaymentException.PAYMENT_CONFIRM_ALREADY);
+
         UserPoint userPoint = userPointRepository.findByUserId(userId)
                 .orElseThrow(() -> new BusinessException(UserExceptionCode.USER_NOT_FOUND));
 

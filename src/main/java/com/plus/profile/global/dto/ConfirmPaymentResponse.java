@@ -5,7 +5,7 @@ import java.util.UUID;
 public record ConfirmPaymentResponse(
         UUID userId,
         UUID orderId,
-        boolean isSuccess,
+        ConfirmPaymentResult status,
         long transactionAmount
 ) {
 }
