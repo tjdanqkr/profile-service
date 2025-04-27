@@ -1,6 +1,6 @@
 package com.plus.profile.profile.domain.repository;
 
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.ProfileView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class ProfileViewRepositoryTest {
+class MyProfileViewRepositoryTest {
     @Autowired
     private ProfileViewRepository profileViewRepository;
     @Autowired
@@ -23,32 +23,32 @@ class ProfileViewRepositoryTest {
     private UUID profileId;
     @BeforeEach
     void setUp() {
-        Profile profile = Profile.builder().title("Test Profile")
+        MyProfile myProfile = MyProfile.builder().title("Test Profile")
                 .content("Detail")
                 .viewCount(0)
                 .userId(UUID.randomUUID())
                 .username("testuser")
                 .build();
-        profileRepository.save(profile);
-        profileId = profile.getId();
-        ProfileView profileView = ProfileView.of(profile.getId());
+        profileRepository.save(myProfile);
+        profileId = myProfile.getId();
+        ProfileView profileView = ProfileView.of(myProfile.getId());
         profileViewRepository.save(profileView);
     }
     @Nested
     @DisplayName("프로필 ID로 view 테이블 조회")
-    class FindByProfileId {
+    class FindByMyProfileId {
         @Test
         @DisplayName("성공")
         void findByProfileId() {
             // given
 
             // when
-            List<ProfileView> profileViews = profileViewRepository.findByProfileId(profileId);
+            List<ProfileView> profileViews = profileViewRepository.findByMyProfileId(profileId);
 
             // then
             assertNotNull(profileViews);
             assertEquals(1, profileViews.size());
-            assertEquals(profileId, profileViews.get(0).getProfile().getId());
+            assertEquals(profileId, profileViews.get(0).getMyProfile().getId());
         }
         @Test
         @DisplayName("존재하지 않는 프로필 ID로 조회")
@@ -57,7 +57,7 @@ class ProfileViewRepositoryTest {
             UUID nonExistentProfileId = UUID.randomUUID();
 
             // when
-            List<ProfileView> profileViews = profileViewRepository.findByProfileId(nonExistentProfileId);
+            List<ProfileView> profileViews = profileViewRepository.findByMyProfileId(nonExistentProfileId);
 
             // then
             assertNotNull(profileViews);

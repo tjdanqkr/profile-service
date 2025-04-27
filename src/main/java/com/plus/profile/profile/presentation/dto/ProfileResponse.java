@@ -1,6 +1,6 @@
 package com.plus.profile.profile.presentation.dto;
 
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
@@ -16,12 +16,12 @@ public class ProfileResponse {
     private final UUID userId;
     private final String username;
     @QueryProjection
-    public ProfileResponse(Profile profile){
-        this.profileId = profile.getId();
-        this.title = profile.getTitle();
-        this.viewCount = profile.getViewCount();
-        this.createdAt = profile.getCreatedAt();
-        this.userId = profile.getUserId();
-        this.username = profile.getUsername();
+    public ProfileResponse(MyProfile myProfile){
+        this.profileId = myProfile.getId();
+        this.title = myProfile.getTitle();
+        this.viewCount = myProfile.getViewCount();
+        this.createdAt = myProfile.getCreatedAt();
+        this.userId = myProfile.getUserId();
+        this.username = myProfile.getUsername();
     }
 }

@@ -1,12 +1,10 @@
 package com.plus.profile.profile.infra.impl;
 
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
-import com.plus.profile.profile.domain.repository.ProfileViewRepository;
 import com.plus.profile.profile.presentation.dto.ProfileResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,14 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class ProfileRepositoryCustomImplTest {
+class MyProfileRepositoryCustomImplTest {
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -32,7 +28,7 @@ class ProfileRepositoryCustomImplTest {
     @Autowired
     private ProfileRepositoryCustomImpl profileRepositoryCustomImpl;
 
-    private List<Profile> profiles;
+    private List<MyProfile> myProfiles;
     private final String[] names = {
             "김민준", "이서준", "박예린", "최지우", "정하준",
             "강서연", "윤도윤", "조은우", "한나윤", "오지민",
@@ -44,19 +40,19 @@ class ProfileRepositoryCustomImplTest {
 
     @BeforeEach
     void setUp() {
-        profiles = new ArrayList<>();
+        myProfiles = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             String name = names[i];
-            Profile profile = Profile.builder()
+            MyProfile myProfile = MyProfile.builder()
                     .username(name)
                     .title("title" + name)
                     .content("content" + name)
                     .viewCount(i)
                     .userId(UUID.randomUUID())
                     .build();
-            profiles.add(profile);
+            myProfiles.add(myProfile);
         }
-        profileRepository.saveAll(profiles);
+        profileRepository.saveAll(myProfiles);
     }
 
     @Nested
@@ -140,18 +136,18 @@ class ProfileRepositoryCustomImplTest {
 
     @Nested
     @DisplayName("프로필 아이디로 조회")
-    class FindProfileById{
+    class FindMyProfileById {
         @Test
         @DisplayName("프로필이 존재할 경우")
         void testFindProfileById() {
             // given
-            Profile profile = profiles.get(0);
+            MyProfile myProfile = myProfiles.get(0);
             // when
-            var result = profileRepositoryCustomImpl.findProfileById(profile.getId());
+            var result = profileRepositoryCustomImpl.findProfileById(myProfile.getId());
             // then
             assertThat(result).isPresent();
-            assertThat(result.get().getTitle()).isEqualTo(profile.getTitle());
-            assertThat(result.get().getContent()).isEqualTo(profile.getContent());
+            assertThat(result.get().getTitle()).isEqualTo(myProfile.getTitle());
+            assertThat(result.get().getContent()).isEqualTo(myProfile.getContent());
         }
         @Test
         @DisplayName("프로필이 존재하지 않을 경우")

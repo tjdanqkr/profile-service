@@ -3,7 +3,7 @@ package com.plus.profile.profile.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.profile.application.ProfileService;
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.exception.ProfileExceptionCode;
 import com.plus.profile.profile.presentation.dto.ProfileDetailResponse;
 import com.plus.profile.profile.presentation.dto.ProfileResponse;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProfileController.class)
-class ProfileControllerTest {
+class MyProfileControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,9 +45,9 @@ class ProfileControllerTest {
         @Test
         @DisplayName("프로필 목록을 정상적으로 반환한다")
         void shouldReturnProfilesSuccessfully() throws Exception {
-            List<Profile> profiles = new ArrayList<>();
+            List<MyProfile> myProfiles = new ArrayList<>();
             for (int i = 1; i < 3; i++) {
-                Profile build = Profile.builder()
+                MyProfile build = MyProfile.builder()
                         .id(UUID.randomUUID())
                         .username("user" + i)
                         .title("Title" + i)
@@ -55,11 +55,11 @@ class ProfileControllerTest {
                         .viewCount(10L * i)
                         .userId(UUID.randomUUID())
                         .build();
-                profiles.add(build);
+                myProfiles.add(build);
             }
 
             // given
-            List<ProfileResponse> profileList = profiles.stream().map(ProfileResponse::new).toList();
+            List<ProfileResponse> profileList = myProfiles.stream().map(ProfileResponse::new).toList();
             Page<ProfileResponse> mockPage = new PageImpl<>(profileList, PageRequest.of(0, 10), 2);
 
             given(profileService.getProfiles(any())).willReturn(mockPage);
@@ -79,9 +79,9 @@ class ProfileControllerTest {
         @Test
         @DisplayName("프로필 목록을 정상적으로 반환한다 - 페이지 정보가 없는 경우")
         void shouldReturnProfilesSuccessfullyWithoutPageInfo() throws Exception {
-            List<Profile> profiles = new ArrayList<>();
+            List<MyProfile> myProfiles = new ArrayList<>();
             for (int i = 1; i < 3; i++) {
-                Profile build = Profile.builder()
+                MyProfile build = MyProfile.builder()
                         .id(UUID.randomUUID())
                         .username("user" + i)
                         .title("Title" + i)
@@ -89,11 +89,11 @@ class ProfileControllerTest {
                         .viewCount(10L * i)
                         .userId(UUID.randomUUID())
                         .build();
-                profiles.add(build);
+                myProfiles.add(build);
             }
 
             // given
-            List<ProfileResponse> profileList = profiles.stream().map(ProfileResponse::new).toList();
+            List<ProfileResponse> profileList = myProfiles.stream().map(ProfileResponse::new).toList();
             Page<ProfileResponse> mockPage = new PageImpl<>(profileList, PageRequest.of(0, 10), 2);
 
             given(profileService.getProfiles(any())).willReturn(mockPage);
@@ -128,15 +128,15 @@ class ProfileControllerTest {
 
     @Nested
     @DisplayName("GET /api/v1/profiles/{profileId}")
-    class GetProfileDetail {
+    class GetMyProfileDetail {
 
         @Test
         @DisplayName("프로필 상세 정보를 정상적으로 반환한다")
         void shouldReturnProfileDetail() throws Exception {
             // given
             UUID profileId = UUID.randomUUID();
-            Profile profile = Profile.builder().id(profileId).title("title").content("content").build();
-            ProfileDetailResponse response = new ProfileDetailResponse(profile);
+            MyProfile myProfile = MyProfile.builder().id(profileId).title("title").content("content").build();
+            ProfileDetailResponse response = new ProfileDetailResponse(myProfile);
 
             given(profileService.getProfileDetail(profileId)).willReturn(response);
 

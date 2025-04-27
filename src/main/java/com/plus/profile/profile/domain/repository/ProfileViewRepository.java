@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProfileViewRepository extends JpaRepository<ProfileView, Long> {
-    List<ProfileView> findByProfileId(UUID profileId);
+    List<ProfileView> findByMyProfileId(UUID profileId);
 }

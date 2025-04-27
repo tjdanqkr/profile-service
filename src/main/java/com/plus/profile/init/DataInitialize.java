@@ -1,7 +1,7 @@
 package com.plus.profile.init;
 
 
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.domain.repository.ProfileViewRepository;
 import com.plus.profile.user.domain.User;
@@ -9,13 +9,14 @@ import com.plus.profile.user.domain.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@org.springframework.context.annotation.Profile({"dev"})
+@Profile({"dev"})
 @Configuration
 @RequiredArgsConstructor
 public class DataInitialize {
@@ -42,14 +43,14 @@ public class DataInitialize {
 
     private void createProfile(List<User> users) {
         users.forEach(user -> {
-            Profile profile = Profile.builder()
+            MyProfile myProfile = MyProfile.builder()
                     .userId(user.getId())
                     .username(user.getUsername())
                     .title("제목 입니다."+ user.getUsername())
                     .content("내용 입니다."+ user.getUsername())
                     .viewCount(random.nextLong(10))
                     .build();
-            profileRepository.save(profile);
+            profileRepository.save(myProfile);
         });
     }
 

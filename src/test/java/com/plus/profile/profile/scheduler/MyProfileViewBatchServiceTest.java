@@ -1,6 +1,6 @@
 package com.plus.profile.profile.scheduler;
 
-import com.plus.profile.profile.domain.Profile;
+import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.ProfileView;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.domain.repository.ProfileViewRepository;
@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class ProfileViewBatchServiceTest {
+class MyProfileViewBatchServiceTest {
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -29,15 +29,15 @@ class ProfileViewBatchServiceTest {
 
     @BeforeEach
     void setUp() {
-        Profile profile = Profile.builder()
+        MyProfile myProfile = MyProfile.builder()
                 .title("Test Profile")
                 .content("Detail Content")
                 .viewCount(0)
                 .userId(UUID.randomUUID())
                 .username("testuser")
                 .build();
-        profileRepository.save(profile);
-        profileId = profile.getId();
+        profileRepository.save(myProfile);
+        profileId = myProfile.getId();
     }
 
     @AfterEach
@@ -86,8 +86,8 @@ class ProfileViewBatchServiceTest {
             profileViewBatchService.flushViewsToDatabase();
 
             // then
-            Profile profile = profileRepository.findById(profileId).orElseThrow();
-            assertThat(profile.getViewCount()).isEqualTo(viewCount);
+            MyProfile myProfile = profileRepository.findById(profileId).orElseThrow();
+            assertThat(myProfile.getViewCount()).isEqualTo(viewCount);
 
             assertThat(profileViewBatchService.getViewMap()).isEmpty();
         }

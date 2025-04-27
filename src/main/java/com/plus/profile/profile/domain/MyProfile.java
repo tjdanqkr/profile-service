@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @EqualsAndHashCode(of="id", callSuper=false)
-public class Profile extends BaseTimeEntity {
+public class MyProfile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     @Column(name="PROFILE_ID")
@@ -30,7 +30,8 @@ public class Profile extends BaseTimeEntity {
     @Column(name="TITLE", nullable=false)
     private String title;
 
-    @Column(name="CONTENT", nullable=false)
+    @Lob
+    @Column(name="CONTENT", nullable=false, columnDefinition = "TEXT")
     private String content;
 
     @Column(name="IS_DELETED", nullable=false)
@@ -47,7 +48,7 @@ public class Profile extends BaseTimeEntity {
     @Column(name = "USERNAME", nullable=false, unique = true)
     private String username;
 
-    @OneToMany(mappedBy="profile", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="myProfile", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default
     private Set<ProfileView> profileViews = new HashSet<>();
