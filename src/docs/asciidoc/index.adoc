@@ -1,0 +1,282 @@
+= Profile Service API 명세서
+:toc: left
+:toclevels: 2
+:sectlinks:
+:doctype: book
+
+== 공통 응답 형식
+
+모든 API는 아래와 같은 공통 응답 포맷을 사용합니다.
+
+[source,json]
+----
+{
+  "success": true,
+  "statusCode": 200,
+  "data": { ... },
+  "message": "성공 메시지",
+  "timestamp": "2025-04-28T12:00:00"
+}
+----
+
+- `success` : 요청 성공 여부
+- `statusCode` : HTTP 응답 코드
+- `data` : API별 결과 데이터
+- `message` : 에러 발생 시 메시지
+- `timestamp` : 요청 처리 시간
+
+== 결제 (Payments)
+
+=== 1. Toss 결제 콜백
+
+Toss 결제 승인 후 리다이렉트 콜백을 처리합니다.
+
+- **Method** : `GET`
+- **URL** : `/api/v1/payments/toss/callback`
+- **설명** : 결제 완료 후 toss가 호출하는 콜백을 처리하여 결과를 리다이렉트 URL로 반환합니다.
+
+==== http-request
+include::{snippets}/payments-toss-callback-success/http-request.adoc[]
+==== query-parameters
+include::{snippets}/payments-toss-callback-success/query-parameters.adoc[]
+==== request-body
+include::{snippets}/payments-toss-callback-success/request-body.adoc[]
+==== response-body
+include::{snippets}/payments-toss-callback-success/response-body.adoc[]
+==== response-fields
+include::{snippets}/payments-toss-callback-success/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "paymentKey는 필수입니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+=== 2. Kakao 결제 콜백
+
+Kakao 결제 승인 후 리다이렉트 콜백을 처리합니다.
+
+- **Method** : `GET`
+- **URL** : `/api/v1/payments/kakao/callback`
+- **설명** : 카카오 결제 완료 후 호출하는 콜백을 처리하여 결과를 리다이렉트 URL로 반환합니다.
+
+==== http-request
+include::{snippets}/payments-kakao-callback-success/http-request.adoc[]
+==== query-parameters
+include::{snippets}/payments-kakao-callback-success/query-parameters.adoc[]
+==== response-body
+include::{snippets}/payments-kakao-callback-success/response-body.adoc[]
+==== response-fields
+include::{snippets}/payments-kakao-callback-success/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "pg_token이 누락되었습니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+== 포인트 (Points)
+
+=== 1. 포인트 충전 요청
+
+회원이 포인트 충전을 요청합니다.
+
+- **Method** : `POST`
+- **URL** : `/api/v1/users/{userId}/points`
+- **설명** : 유저가 원하는 금액만큼 포인트 충전 요청을 생성합니다.
+
+==== http-request
+include::{snippets}/point-charge/http-request.adoc[]
+==== request-body
+include::{snippets}/point-charge/request-body.adoc[]
+==== request-fields
+include::{snippets}/point-charge/request-fields.adoc[]
+==== response-body
+include::{snippets}/point-charge/response-body.adoc[]
+==== response-fields
+include::{snippets}/point-charge/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "충전 금액은 100 이상이어야 합니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+=== 2. 포인트 충전 확정
+
+결제 완료 후 포인트를 확정 반영합니다.
+
+- **Method** : `POST`
+- **URL** : `/api/v1/users/{userId}/points/confirm`
+- **설명** : 결제 완료 후 실제 포인트를 계정에 반영합니다.
+
+==== http-request
+include::{snippets}/point-charge-confirm/http-request.adoc[]
+==== request-body
+include::{snippets}/point-charge-confirm/request-body.adoc[]
+==== request-fields
+include::{snippets}/point-charge-confirm/request-fields.adoc[]
+==== response-body
+include::{snippets}/point-charge-confirm/response-body.adoc[]
+==== response-fields
+include::{snippets}/point-charge-confirm/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 409,
+  "message": "이미 처리된 결제입니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+== 상품 (Products)
+
+=== 1. 상품 포인트 구매
+
+회원이 포인트로 상품을 구매합니다.
+
+- **Method** : `POST`
+- **URL** : `/api/v1/products/{productId}/purchase`
+- **설명** : 회원이 포인트만으로 상품을 구매합니다.
+
+==== http-request
+include::{snippets}/product-purchase/http-request.adoc[]
+==== request-body
+include::{snippets}/product-purchase/request-body.adoc[]
+==== request-fields
+include::{snippets}/product-purchase/request-fields.adoc[]
+==== response-body
+include::{snippets}/product-purchase/response-body.adoc[]
+==== response-fields
+include::{snippets}/product-purchase/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 409,
+  "message": "잔여 포인트가 부족합니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+=== 2. 상품 포인트+쿠폰 구매
+
+회원이 쿠폰을 함께 사용하여 상품을 구매합니다.
+
+- **Method** : `POST`
+- **URL** : `/api/v1/products/{productId}/purchase-with-coupon?userId={userId}`
+- **설명** : 회원이 포인트와 쿠폰을 함께 사용하여 상품을 할인 구매합니다.
+
+==== http-request
+include::{snippets}/product-purchase-with-coupon/http-request.adoc[]
+==== request-body
+include::{snippets}/product-purchase-with-coupon/request-body.adoc[]
+==== request-fields
+include::{snippets}/product-purchase-with-coupon/request-fields.adoc[]
+==== response-body
+include::{snippets}/product-purchase-with-coupon/response-body.adoc[]
+==== response-fields
+include::{snippets}/product-purchase-with-coupon/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 409,
+  "message": "쿠폰이 유효하지 않습니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+== 프로필 (Profiles)
+
+=== 1. 프로필 목록 조회
+
+프로필 리스트를 조회합니다.
+
+- **Method** : `GET`
+- **URL** : `/api/v1/profiles`
+- **설명** : 조건에 따라 프로필 목록을 페이징 조회합니다.
+
+==== http-request
+include::{snippets}/profiles-get/http-request.adoc[]
+==== query-parameters
+include::{snippets}/profiles-get/query-parameters.adoc[]
+==== request-body
+include::{snippets}/profiles-get/request-body.adoc[]
+==== response-body
+include::{snippets}/profiles-get/response-body.adoc[]
+==== response-fields
+include::{snippets}/profiles-get/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 404,
+  "message": "등록된 프로필이 없습니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+=== 2. 프로필 상세 조회
+
+특정 프로필 상세 정보를 조회합니다.
+
+- **Method** : `GET`
+- **URL** : `/api/v1/profiles/{profileId}`
+- **설명** : 특정 프로필의 상세 내용을 조회합니다.
+
+==== http-request
+include::{snippets}/profiles-get-detail/http-request.adoc[]
+==== request-body
+include::{snippets}/profiles-get-detail/request-body.adoc[]
+==== response-body
+include::{snippets}/profiles-get-detail/response-body.adoc[]
+==== response-fields
+include::{snippets}/profiles-get-detail/response-fields.adoc[]
+
+==== 실패 응답 예시
+[source,json]
+----
+{
+  "success": false,
+  "statusCode": 404,
+  "message": "해당 프로필을 찾을 수 없습니다.",
+  "timestamp": "2025-04-28T19:02:00"
+}
+----
+
+== 에러 코드
+
+|===
+| 에러 코드 | 설명
+
+| 400 | 잘못된 요청 (Validation 실패 등)
+| 404 | 리소스를 찾을 수 없음 (ex. 프로필 없음)
+| 409 | 비즈니스 로직 충돌 (ex. 중복 결제 등)
+| 500 | 서버 내부 오류
+|===
+

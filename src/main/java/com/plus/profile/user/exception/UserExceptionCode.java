@@ -3,7 +3,7 @@ package com.plus.profile.user.exception;
 import com.plus.profile.global.exception.BaseExceptionCode;
 
 public enum UserExceptionCode implements BaseExceptionCode {
-    USER_NOT_FOUND(404, "User not found");
+    USER_NOT_FOUND(401, "User not found");
 
     private final int statusCode;
     private final String message;

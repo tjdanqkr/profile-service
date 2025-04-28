@@ -16,6 +16,16 @@ public class UserCouponResponse {
     private final long discountAmount;
     private final LocalDateTime expirationDate;
     private final String description;
+
+    public UserCouponResponse(Long id, UUID couponId, String couponCode, long discountAmount, LocalDateTime expirationDate, String description) {
+        this.id = id;
+        this.couponId = couponId;
+        this.couponCode = couponCode;
+        this.discountAmount = discountAmount;
+        this.expirationDate = expirationDate;
+        this.description = description;
+    }
+
     @QueryProjection
     public UserCouponResponse(UserCoupon userCoupon) {
         this.id = userCoupon.getId();

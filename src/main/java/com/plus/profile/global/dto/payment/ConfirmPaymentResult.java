@@ -1,4 +1,4 @@
-package com.plus.profile.global.dto;
+package com.plus.profile.global.dto.payment;
 
 public enum ConfirmPaymentResult {
     NOT_FOUND,

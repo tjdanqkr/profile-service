@@ -15,6 +15,16 @@ public class ProfileResponse {
     private final LocalDateTime createdAt;
     private final UUID userId;
     private final String username;
+
+    public ProfileResponse(UUID profileId, String title, long viewCount, LocalDateTime createdAt, UUID userId, String username) {
+        this.profileId = profileId;
+        this.title = title;
+        this.viewCount = viewCount;
+        this.createdAt = createdAt;
+        this.userId = userId;
+        this.username = username;
+    }
+
     @QueryProjection
     public ProfileResponse(MyProfile myProfile){
         this.profileId = myProfile.getId();

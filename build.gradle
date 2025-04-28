@@ -3,16 +3,24 @@ plugins {
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'jacoco'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
+
+
 group = 'com.plus'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+configurations {
+    asciidoctorExt
+}
+
 def jacocoDir = layout.buildDirectory.dir("reports/")
 
 private excludedClassFilesForReport(classDirectories) {
@@ -20,6 +28,7 @@ private excludedClassFilesForReport(classDirectories) {
             files(classDirectories.files.collect {
                 fileTree(dir: it, exclude: [
                         "**/global/**",
+                        "**/*Client*",
                         "**/init/**",
                         "**/Q*",
                         "**/*Dto*",
@@ -81,6 +90,10 @@ jar{
     enabled = false
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
 dependencies {
     implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.1.0:jakarta"
@@ -98,13 +111,30 @@ dependencies {
     implementation 'org.flywaydb:flyway-mysql'
 
     annotationProcessor 'org.projectlombok:lombok'
-
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testRuntimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
+    outputs.dir snippetsDir
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport'
+}
+
+
+asciidoctor {
+    inputs.dir snippetsDir
+    sourceDir = file("src/docs/asciidoc")
+    outputDir = file("src/main/resources/static/docs")
+    configurations 'asciidoctorExt'
+    dependsOn test
+    baseDirFollowsSourceFile()
+}
+
+
+bootJar {
+    dependsOn asciidoctor
 }
