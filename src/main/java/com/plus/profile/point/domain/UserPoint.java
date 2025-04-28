@@ -1,6 +1,8 @@
 package com.plus.profile.point.domain;
 
+import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.global.jpa.BaseTimeEntity;
+import com.plus.profile.point.exception.PointExceptionCode;
 import com.plus.profile.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,5 +30,8 @@ public class UserPoint extends BaseTimeEntity {
 
     public void charge(long amount) {
         this.point += amount;
+    }
+    public void payOff(long amount) {
+        this.point -= amount;
     }
 }

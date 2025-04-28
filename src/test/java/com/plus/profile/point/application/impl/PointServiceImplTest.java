@@ -2,6 +2,9 @@ package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.dto.*;
 import com.plus.profile.global.dto.payment.*;
+import com.plus.profile.global.dto.point.PayOffPointRequest;
+import com.plus.profile.global.dto.point.PayOffPointResponse;
+import com.plus.profile.global.dto.point.PayOffResultType;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.global.exception.GlobalPaymentException;
 import com.plus.profile.point.application.PointPaymentClientService;
@@ -64,6 +67,78 @@ class PointServiceImplTest {
                 .createTransaction(any(CreatePaymentRequest.class));
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
+
+    @Nested
+    @DisplayName("포인트 결제")
+    class PayOffPoint {
+        @Test
+        @DisplayName("포인트 결제 성공")
+        void payOffPointSuccess() {
+            // given
+            UUID userId = UUID.randomUUID();
+            long amount = 5000L;
+
+            UserPoint userPoint = UserPoint.builder()
+                    .point(10000L)
+                    .build();
+
+            when(userPointRepository.findByUserId(userId))
+                    .thenReturn(Optional.of(userPoint));
+            PayOffPointRequest request = new PayOffPointRequest(userId, 1, amount, "test-product");
+            // when
+            PayOffPointResponse response = pointService.payOffPoint(request);
+
+            // then
+            assertThat(userPoint.getPoint()).isEqualTo(5000L);
+            verify(userPointLogRepository, times(1)).save(any(UserPointLog.class));
+            assertThat(response.isSuccess()).isTrue();
+            assertThat(response.remainPoint()).isEqualTo(5000L);
+            assertThat(response.resultType()).isEqualTo(PayOffResultType.SUCCESS);
+        }
+        @Test
+        @DisplayName("포인트 결제 실패 - 유저 정보 없음")
+        void payOffPointFailWhenUserNotFound() {
+            // given
+            UUID userId = UUID.randomUUID();
+            long amount = 5000L;
+
+            when(userPointRepository.findByUserId(userId))
+                    .thenReturn(Optional.empty());
+
+            PayOffPointRequest request = new PayOffPointRequest(userId, 1, amount, "test-product");
+            // when
+            PayOffPointResponse response = pointService.payOffPoint(request);
+            // then
+            assertThat(response.isSuccess()).isFalse();
+            assertThat(response.resultType()).isEqualTo(PayOffResultType.USER_NOT_FOUND);
+            verify(userPointLogRepository, times(0)).save(any(UserPointLog.class));
+        }
+        @Test
+        @DisplayName("포인트 결제 실패 - 잔액 부족")
+        void payOffPointFailWhenInsufficientBalance() {
+            // given
+            UUID userId = UUID.randomUUID();
+            long amount = 5000L;
+
+            UserPoint userPoint = UserPoint.builder()
+                    .point(1000L)
+                    .build();
+
+            when(userPointRepository.findByUserId(userId))
+                    .thenReturn(Optional.of(userPoint));
+
+            PayOffPointRequest request = new PayOffPointRequest(userId, 1, amount, "test-product");
+            // when
+            PayOffPointResponse response = pointService.payOffPoint(request);
+            // then
+            assertThat(userPoint.getPoint()).isEqualTo(1000L);
+            assertThat(response.isSuccess()).isFalse();
+            assertThat(response.resultType()).isEqualTo(PayOffResultType.INSUFFICIENT_BALANCE);
+            verify(userPointRepository, times(1)).findByUserId(userId);
+            verify(userPointLogRepository, times(0)).save(any(UserPointLog.class));
+        }
+    }
+
     @Nested
     @DisplayName("confirmPointCharge 메서드 테스트")
     class ConfirmPointChargeTest {

@@ -1,5 +1,6 @@
 package com.plus.profile.point.domain;
 
+import com.plus.profile.global.dto.point.PayOffPointRequest;
 import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -68,6 +69,36 @@ public class UserPointLog extends BaseTimeEntity {
                 .afterPoints(after)
                 .pointsAmount(pointsAmount)
                 .type(UserPointLogType.CHARGE)
+                .build();
+    }
+    public static UserPointLog createPaidLog(long before, long after, PayOffPointRequest request) {
+        return UserPointLog.builder()
+                .userId(request.userId())
+                .productId(request.productId())
+                .productName(request.productName())
+                .productPrice(request.productPrice())
+                .beforePoints(before)
+                .afterPoints(after)
+                .pointsAmount(request.productPrice())
+                .type(UserPointLogType.USE)
+                .build();
+    }
+    public static UserPointLog createPaidWhitCouponLog(long before, long after, long couponDiscountAmount, PayOffPointRequest request, UserCoupon userCoupon) {
+        return UserPointLog.builder()
+                .userId(request.userId())
+                .productId(request.productId())
+                .productName(request.productName())
+                .productPrice(request.productPrice())
+                .beforePoints(before)
+                .afterPoints(after)
+                .pointsAmount(request.productPrice() - couponDiscountAmount)
+                .couponIsUsed(true)
+                .couponId(userCoupon.getCouponId())
+                .userCouponId(userCoupon.getId())
+                .couponCode(userCoupon.getCouponCode())
+                .couponDescription(userCoupon.getDescription())
+                .couponDiscountAmount(couponDiscountAmount)
+                .type(UserPointLogType.USE)
                 .build();
     }
 }
