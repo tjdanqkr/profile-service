@@ -283,6 +283,8 @@ class PointServiceImplTest {
             PayOffPointResponse response = pointService.payOffPointWithCoupon(request);
 
             // then
+            assertThat(userCoupon.isUsed()).isTrue();
+            assertThat(userPoint.getPoint()).isEqualTo(2000L);
             assertThat(response.isSuccess()).isTrue();
             assertThat(response.resultType()).isEqualTo(PayOffResultType.SUCCESS);
             verify(userPointRepository).findByUserId(userId);
