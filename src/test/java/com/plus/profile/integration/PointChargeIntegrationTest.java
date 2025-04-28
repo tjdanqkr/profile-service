@@ -1,7 +1,7 @@
 package com.plus.profile.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.plus.profile.global.dto.CreatePaymentResponse;
+import com.plus.profile.global.dto.payment.CreatePaymentResponse;
 import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.point.domain.UserPoint;
 import com.plus.profile.point.presentation.dto.PointChargeConfirmRequest;

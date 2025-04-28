@@ -1,9 +1,8 @@
 package com.plus.profile.point.application.impl;
 
-import com.plus.profile.global.dto.*;
+import com.plus.profile.global.dto.payment.*;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.global.exception.GlobalPaymentException;
-import com.plus.profile.global.exception.GlobalServerException;
 import com.plus.profile.point.application.PointService;
 import com.plus.profile.point.application.PointPaymentClientService;
 import com.plus.profile.point.domain.UserPoint;

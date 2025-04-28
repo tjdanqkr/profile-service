@@ -1,6 +1,8 @@
 package com.plus.profile.init;
 
 
+import com.plus.profile.product.domain.Product;
+import com.plus.profile.product.domain.repository.ProductRepository;
 import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.domain.repository.ProfileViewRepository;
@@ -26,6 +28,7 @@ public class DataInitialize {
     private final ProfileRepository profileRepository;
     private final ProfileViewRepository profileViewRepository;
     private final UserPointRepository userPointRepository;
+    private final ProductRepository productRepository;
     private final Random random = new Random();
     private final String[] names = {
             "김민준", "이서준", "박예린", "최지우", "정하준",
@@ -38,10 +41,11 @@ public class DataInitialize {
     @PostConstruct
     @Transactional
     void init() {
-
         resetDatabase();
         List<User> users = createUserTotal30();
         createProfile(users);
+        createProduct();
+
     }
 
     private void createProfile(List<User> users) {
@@ -77,6 +81,20 @@ public class DataInitialize {
         }
         userRepository.saveAll(users);
         return users;
+    }
+    private List<Product> createProduct() {
+        List<Product> products = new ArrayList<>();
+        long[] prices = {1_000_000, 10_000, 5_000};
+        for (int i = 1; i <= prices.length; i++) {
+            long price = prices[i - 1];
+            Product product = Product.builder()
+                    .name("상품" + i)
+                    .price(price)
+                    .build();
+            products.add(product);
+        }
+        productRepository.saveAll(products);
+        return products;
     }
 
 }

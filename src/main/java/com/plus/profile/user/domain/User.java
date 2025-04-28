@@ -13,8 +13,8 @@ import java.util.UUID;
 @Entity
 @Table(name="USERS",
         indexes={
-                @Index(name="IDX_USER_USERNAME", columnList="username"),
-                @Index(name="IDX_USER_CREATED_AT", columnList="createdAt")
+                @Index(name="IDX_USER_USERNAME", columnList="USERNAME"),
+                @Index(name="IDX_USER_CREATED_AT", columnList="CREATED_AT"),
         })
 @Getter
 @Builder

@@ -1,6 +1,7 @@
 package com.plus.profile.payment.application.impl;
 
 import com.plus.profile.global.dto.*;
+import com.plus.profile.global.dto.payment.*;
 import com.plus.profile.payment.application.PaymentKakaoClient;
 import com.plus.profile.payment.application.PaymentTossClient;
 import com.plus.profile.payment.domain.PaymentConfirmStatus;

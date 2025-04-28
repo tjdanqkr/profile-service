@@ -1,6 +1,7 @@
 package com.plus.profile.point.application.impl;
 
 import com.plus.profile.global.dto.*;
+import com.plus.profile.global.dto.payment.*;
 import com.plus.profile.payment.application.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

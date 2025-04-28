@@ -1,4 +1,4 @@
-package com.plus.profile.global.dto;
+package com.plus.profile.global.dto.payment;
 
 import java.util.UUID;
 

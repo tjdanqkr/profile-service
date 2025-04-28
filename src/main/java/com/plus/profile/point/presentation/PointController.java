@@ -1,7 +1,7 @@
 package com.plus.profile.point.presentation;
 
 import com.plus.profile.global.dto.ApiResponse;
-import com.plus.profile.global.dto.CreatePaymentResponse;
+import com.plus.profile.global.dto.payment.CreatePaymentResponse;
 import com.plus.profile.point.application.PointService;
 import com.plus.profile.point.presentation.dto.PointChargeConfirmRequest;
 import com.plus.profile.point.presentation.dto.PointChargeRequest;

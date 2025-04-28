@@ -2,21 +2,15 @@ package com.plus.profile.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.plus.profile.global.dto.CreatePaymentResponse;
-import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.exception.BusinessException;
-import com.plus.profile.point.application.PointService;
 import com.plus.profile.user.application.UserService;
 import com.plus.profile.user.exception.UserExceptionCode;
-import com.plus.profile.point.presentation.dto.PointChargeConfirmRequest;
-import com.plus.profile.point.presentation.dto.PointChargeRequest;
 import com.plus.profile.user.presentation.dto.UserDetailResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;

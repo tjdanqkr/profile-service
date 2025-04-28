@@ -1,15 +1,13 @@
 package com.plus.profile.point.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.plus.profile.global.dto.CreatePaymentResponse;
+import com.plus.profile.global.dto.payment.CreatePaymentResponse;
 import com.plus.profile.global.dto.PayGatewayCompany;
 import com.plus.profile.global.exception.BusinessException;
 import com.plus.profile.global.exception.GlobalPaymentException;
-import com.plus.profile.global.exception.GlobalServerException;
 import com.plus.profile.point.application.PointService;
 import com.plus.profile.point.presentation.dto.PointChargeConfirmRequest;
 import com.plus.profile.point.presentation.dto.PointChargeRequest;
-import com.plus.profile.user.presentation.UserController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

@@ -14,6 +14,8 @@ import java.util.UUID;
                 @Index(name = "IDX_PAYMENT_USER_COUPON_COUPON_ID", columnList = "COUPON_ID"),
                 @Index(name = "IDX_PAYMENT_USER_COUPON_IS_USED", columnList = "IS_USED"),
                 @Index(name = "IDX_PAYMENT_USER_COUPON_EXPIRATION_DATE", columnList = "EXPIRATION_DATE"),
+                @Index(name = "IDX_PAYMENT_USER_PRODUCT_ID", columnList = "PRODUCT_ID"),
+                @Index(name = "IDX_PAYMENT_USER_PRODUCT_NAME", columnList = "PRODUCT_NAME"),
         })
 @Getter
 @Builder
@@ -27,6 +29,12 @@ public class UserPointLog extends BaseTimeEntity {
     @Column(name="USERID", nullable = false)
     private UUID userId;
 
+    @Column(name="PRODUCT_ID")
+    private Long productId;
+    @Column(name="PRODUCT_NAME")
+    private String productName;
+    @Column(name="PRODUCT_PRICE")
+    private Long productPrice;
 
     @Column(name="COUPON_IS_USED", nullable = false)
     @Builder.Default
