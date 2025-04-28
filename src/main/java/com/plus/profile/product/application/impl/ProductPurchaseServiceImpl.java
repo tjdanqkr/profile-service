@@ -40,8 +40,8 @@ public class ProductPurchaseServiceImpl implements ProductPurchaseService {
     }
 
     @Override
-    public ProductPurchaseResponse productPurchaseWithCoupon(UUID userId, ProductPurchaseRequest request) {
-        Product product = productRepository.findById(request.productId())
+    public ProductPurchaseResponse productPurchaseWithCoupon(UUID userId, Long productId, ProductPurchaseRequest request) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException(ProductExceptionCode.PRODUCT_NOT_FOUND));
 
         PayOffPointWithCouponRequest payRequest = new PayOffPointWithCouponRequest(

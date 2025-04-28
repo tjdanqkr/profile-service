@@ -1,7 +1,10 @@
 package com.plus.profile.product.presentation.dto;
 
+
+import jakarta.validation.constraints.NotNull;
+
 public record ProductPurchaseRequest(
-        Long productId,
-        Long userCouponId //nullable
+        @NotNull(message = "Coupon ID is required when using a coupon.")
+        Long userCouponId
 ) {
 }

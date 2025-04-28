@@ -179,10 +179,10 @@ class ProductPurchaseServiceImplTest {
                             true, "success", PayOffResultType.SUCCESS, 4000L // remainPoint
                     ));
 
-            ProductPurchaseRequest request = new ProductPurchaseRequest(product.getId(), 1L);
+            ProductPurchaseRequest request = new ProductPurchaseRequest(1L);
 
             // when
-            ProductPurchaseResponse response = productPurchaseService.productPurchaseWithCoupon(userId, request);
+            ProductPurchaseResponse response = productPurchaseService.productPurchaseWithCoupon(userId, product.getId(), request);
 
             // then
             assertThat(response).isNotNull();
@@ -210,10 +210,10 @@ class ProductPurchaseServiceImplTest {
             when(productRepository.findById(product.getId()))
                     .thenReturn(Optional.empty());
 
-            ProductPurchaseRequest request = new ProductPurchaseRequest(product.getId(), 1L);
+            ProductPurchaseRequest request = new ProductPurchaseRequest( 1L);
 
             // when & then
-            assertThatThrownBy(() -> productPurchaseService.productPurchaseWithCoupon(userId, request))
+            assertThatThrownBy(() -> productPurchaseService.productPurchaseWithCoupon(userId, product.getId(), request))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining(ProductExceptionCode.PRODUCT_NOT_FOUND.getMessage());
         }
@@ -234,10 +234,10 @@ class ProductPurchaseServiceImplTest {
             when(productPointClientService.payOffPointWithCoupon(any()))
                     .thenReturn(new PayOffPointResponse(false, "잔액 부족", PayOffResultType.NOT_ENOUGH_POINTS, 0));
 
-            ProductPurchaseRequest request = new ProductPurchaseRequest(product.getId(), 1L);
+            ProductPurchaseRequest request = new ProductPurchaseRequest(1L);
 
             // when & then
-            assertThatThrownBy(() -> productPurchaseService.productPurchaseWithCoupon(userId, request))
+            assertThatThrownBy(() -> productPurchaseService.productPurchaseWithCoupon(userId, product.getId(), request))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining(ProductExceptionCode.NOT_ENOUGH_POINTS.getMessage());
         }
@@ -258,10 +258,10 @@ class ProductPurchaseServiceImplTest {
             when(productPointClientService.payOffPointWithCoupon(any()))
                     .thenReturn(new PayOffPointResponse(false, "쿠폰 없음", PayOffResultType.COUPON_NOT_FOUND, 0));
 
-            ProductPurchaseRequest request = new ProductPurchaseRequest(product.getId(), 1L);
+            ProductPurchaseRequest request = new ProductPurchaseRequest(1L);
 
             // when & then
-            assertThatThrownBy(() -> productPurchaseService.productPurchaseWithCoupon(userId, request))
+            assertThatThrownBy(() -> productPurchaseService.productPurchaseWithCoupon(userId, product.getId(), request))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining(ProductExceptionCode.COUPON_NOT_FOUND.getMessage());
         }

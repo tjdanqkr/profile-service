@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface ProductPurchaseService {
     ProductPurchaseResponse productPurchase(UUID userId, Long productId);
-    ProductPurchaseResponse productPurchaseWithCoupon(UUID userId, ProductPurchaseRequest request);
+    ProductPurchaseResponse productPurchaseWithCoupon(UUID userId, Long productId, ProductPurchaseRequest request);
 }
