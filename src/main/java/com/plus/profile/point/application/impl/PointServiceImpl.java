@@ -75,7 +75,7 @@ public class PointServiceImpl implements PointService, PointClientService {
             return new PayOffPointResponse(false, PayOffResultType.USER_NOT_FOUND.getMessage(), PayOffResultType.USER_NOT_FOUND, 0);
         UserPoint userPoint = byUserId.get();
         if(userPoint.getPoint() < request.productPrice())
-            return new PayOffPointResponse(false, PayOffResultType.INSUFFICIENT_BALANCE.getMessage(), PayOffResultType.INSUFFICIENT_BALANCE, 0);
+            return new PayOffPointResponse(false, PayOffResultType.NOT_ENOUGH_POINTS.getMessage(), PayOffResultType.NOT_ENOUGH_POINTS, 0);
         long before = userPoint.getPoint();
 
         userPoint.payOff(request.productPrice());

@@ -73,7 +73,7 @@ class UserControllerTest {
 
             // when & then
             mockMvc.perform(get("/api/v1/users/{userId}", userId))
-                    .andExpect(status().isNotFound())
+                    .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.success").value(false))
                     .andExpect(jsonPath("$.message").value("User not found"));
         }

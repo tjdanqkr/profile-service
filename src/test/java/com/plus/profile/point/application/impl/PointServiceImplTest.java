@@ -133,7 +133,7 @@ class PointServiceImplTest {
             // then
             assertThat(userPoint.getPoint()).isEqualTo(1000L);
             assertThat(response.isSuccess()).isFalse();
-            assertThat(response.resultType()).isEqualTo(PayOffResultType.INSUFFICIENT_BALANCE);
+            assertThat(response.resultType()).isEqualTo(PayOffResultType.NOT_ENOUGH_POINTS);
             verify(userPointRepository, times(1)).findByUserId(userId);
             verify(userPointLogRepository, times(0)).save(any(UserPointLog.class));
         }

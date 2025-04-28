@@ -2,7 +2,7 @@ package com.plus.profile.global.dto.point;
 
 public enum PayOffResultType {
     SUCCESS("Payment success"),
-    INSUFFICIENT_BALANCE("Insufficient point balance"),
+    NOT_ENOUGH_POINTS("Not enough points"),
     COUPON_NOT_FOUND("Coupon not found"),
     COUPON_EXPIRED("Coupon expired"),
     COUPON_ALREADY_USED("Coupon already used"),
