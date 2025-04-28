@@ -1,6 +1,7 @@
 package com.plus.profile.point.domain;
 
 import com.plus.profile.global.dto.point.PayOffPointRequest;
+import com.plus.profile.global.dto.point.PayOffPointWithCouponRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -66,11 +67,11 @@ class UserPointLogTest {
     void createPaidWithCouponLog() {
         // given
         UUID userId = UUID.randomUUID();
-        PayOffPointRequest request = new PayOffPointRequest(
-                userId, 1L, 5000L, "상품1"
+        PayOffPointWithCouponRequest request = new PayOffPointWithCouponRequest(
+                userId, 1L, 5000L, "상품1", 1L
         );
         UserCoupon userCoupon = UserCoupon.builder()
-                .id(10L)
+                .id(1L)
                 .couponId(UUID.randomUUID())
                 .couponCode("ABC123")
                 .description("테스트 쿠폰")

@@ -1,6 +1,7 @@
 package com.plus.profile.point.domain;
 
 import com.plus.profile.global.dto.point.PayOffPointRequest;
+import com.plus.profile.global.dto.point.PayOffPointWithCouponRequest;
 import com.plus.profile.global.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -83,7 +84,7 @@ public class UserPointLog extends BaseTimeEntity {
                 .type(UserPointLogType.USE)
                 .build();
     }
-    public static UserPointLog createPaidWhitCouponLog(long before, long after, long couponDiscountAmount, PayOffPointRequest request, UserCoupon userCoupon) {
+    public static UserPointLog createPaidWhitCouponLog(long before, long after, long couponDiscountAmount, PayOffPointWithCouponRequest request, UserCoupon userCoupon) {
         return UserPointLog.builder()
                 .userId(request.userId())
                 .productId(request.productId())

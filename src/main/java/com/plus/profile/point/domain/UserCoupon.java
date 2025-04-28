@@ -36,4 +36,8 @@ public class UserCoupon {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="USER_ID")
     private User user;
+
+    public void useCoupon() {
+        this.isUsed = true;
+    }
 }
