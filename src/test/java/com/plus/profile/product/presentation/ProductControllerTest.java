@@ -88,7 +88,7 @@ class ProductControllerTest {
                             responseFields(
                                     fieldWithPath("success").description("요청 성공 여부"),
                                     fieldWithPath("statusCode").description("HTTP 상태 코드"),
-                                    fieldWithPath("timestamp").description("요청 시각"),
+                                    fieldWithPath("timestamp").description("요청 처리 시간"),
                                     fieldWithPath("data.productId").description("상품 ID"),
                                     fieldWithPath("data.productName").description("상품 이름"),
                                     fieldWithPath("data.originalPrice").description("상품 원래 가격"),
@@ -155,7 +155,7 @@ class ProductControllerTest {
                             responseFields(
                                     fieldWithPath("success").description("요청 성공 여부"),
                                     fieldWithPath("statusCode").description("HTTP 상태 코드"),
-                                    fieldWithPath("timestamp").description("요청 시각"),
+                                    fieldWithPath("timestamp").description("요청 처리 시간"),
                                     fieldWithPath("data.productId").description("상품 ID"),
                                     fieldWithPath("data.productName").description("상품 이름"),
                                     fieldWithPath("data.originalPrice").description("상품 원래 가격"),

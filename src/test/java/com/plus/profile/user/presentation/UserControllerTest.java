@@ -113,7 +113,7 @@ class UserControllerTest {
                             responseFields(
                                     fieldWithPath("success").description("요청 성공 여부"),
                                     fieldWithPath("statusCode").description("HTTP 상태 코드"),
-                                    fieldWithPath("timestamp").description("요청 시각"),
+                                    fieldWithPath("timestamp").description("요청 처리 시간"),
                                     fieldWithPath("data.id").description("유저 ID"),
                                     fieldWithPath("data.username").description("유저 이름"),
                                     fieldWithPath("data.role").description("유저 역할"),
