@@ -172,6 +172,7 @@
 - 모든 API는 **MockMvc 기반 통합 테스트**로 검증
 - test/java/com/plus/profile/integration 통합 테스트 내용 존재
 - postman collection 파일 제공 (postman/*.json) id는 수정 필요
+- 조회수 증가 부분은 jmeter(user: 10, loop: 100) 성공
 
 ---
 
