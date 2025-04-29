@@ -46,5 +46,5 @@ public class User extends BaseTimeEntity {
     private Set<UserCoupon> userCoupons = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    UserPoint userPoint;
+    private UserPoint userPoint;
 }

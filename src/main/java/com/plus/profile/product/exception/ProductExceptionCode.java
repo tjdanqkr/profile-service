@@ -11,7 +11,7 @@ public enum ProductExceptionCode implements BaseExceptionCode {
     INVALID_COUPON(400,"Invalid coupon"),
     USER_NOT_FOUND(401,"User not found"),
     SYSTEM_ERROR(500,"Internal system error"),
-    NOT_ENOUGH_POINTS(400, "Not enough point"),
+    NOT_ENOUGH_POINTS(400, "Not enough points"),
     PRODUCT_NOT_FOUND(404, "Product not found");
 
     private final int statusCode;

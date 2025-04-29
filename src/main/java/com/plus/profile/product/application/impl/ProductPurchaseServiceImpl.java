@@ -73,15 +73,14 @@ public class ProductPurchaseServiceImpl implements ProductPurchaseService {
             throw new BusinessException(ProductExceptionCode.SYSTEM_ERROR);
         }
 
-        long discountAmount = product.getPrice() - response.remainPoint();
-        long finalPrice = product.getPrice() - discountAmount;
+        long discountAmount = product.getPrice() - response.usedPoint();
 
         return new ProductPurchaseResponse(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
                 discountAmount,
-                finalPrice,
+                response.usedPoint(),
                 response.remainPoint()
         );
     }

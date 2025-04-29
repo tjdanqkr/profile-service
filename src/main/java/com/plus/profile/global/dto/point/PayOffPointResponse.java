@@ -4,6 +4,8 @@ public record PayOffPointResponse(
         boolean isSuccess,
         String message,
         PayOffResultType resultType,
-        long remainPoint
+        long remainPoint,
+        long usedPoint
+
 ) {
 }
