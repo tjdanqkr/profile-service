@@ -28,11 +28,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -41,6 +43,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,8 +56,10 @@ class ProductControllerTest {
 
     @MockitoBean
     private ProductPurchaseService productPurchaseService;
+
     @MockitoBean
     private ProductService productService;
+
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -67,6 +72,7 @@ class ProductControllerTest {
                 .apply(documentationConfiguration(restDocumentation))
                 .build();
     }
+
 
     @Test
     void getProductList() throws Exception {
@@ -112,6 +118,7 @@ class ProductControllerTest {
                 ));
     }
 
+
     @Nested
     @DisplayName("포인트로 상품 구매 API")
     class PurchaseProduct {
@@ -123,7 +130,9 @@ class ProductControllerTest {
             ProductPurchaseResponse mockResponse = new ProductPurchaseResponse(
                     productId, "상품명", 10000L, 0L, 10000L, 90000L
             );
+
             when(productPurchaseService.productPurchase(userId, productId))
+
                     .thenReturn(mockResponse);
 
             // when, then
@@ -160,7 +169,9 @@ class ProductControllerTest {
         @DisplayName("구매 실패 - 포인트 부족")
         void purchaseProduct_fail_insufficientPoints() throws Exception {
             // given
+
             when(productPurchaseService.productPurchase(userId, productId))
+
                     .thenThrow(new BusinessException(ProductExceptionCode.NOT_ENOUGH_POINTS));
 
             // when, then
@@ -184,7 +195,9 @@ class ProductControllerTest {
             ProductPurchaseResponse mockResponse = new ProductPurchaseResponse(
                     productId, "상품명", 10000L, 2000L, 8000L, 92000L
             );
+
             when(productPurchaseService.productPurchaseWithCoupon(userId, productId, request))
+
                     .thenReturn(mockResponse);
 
             // when, then
@@ -227,7 +240,9 @@ class ProductControllerTest {
         void purchaseProductWithCoupon_fail_insufficientPoints() throws Exception {
             // given
             ProductPurchaseRequest request = new ProductPurchaseRequest(100L);
+
             when(productPurchaseService.productPurchaseWithCoupon(userId, productId, request))
+
                     .thenThrow(new BusinessException(ProductExceptionCode.NOT_ENOUGH_POINTS));
 
             // when, then
@@ -244,6 +259,7 @@ class ProductControllerTest {
             // given
             ProductPurchaseRequest request = new ProductPurchaseRequest(100L);
             when(productPurchaseService.productPurchaseWithCoupon(userId, productId, request))
+
                     .thenThrow(new BusinessException(ProductExceptionCode.COUPON_NOT_FOUND));
 
             // when, then
@@ -260,7 +276,9 @@ class ProductControllerTest {
         void purchaseProductWithCoupon_fail_couponAlreadyUsed() throws Exception {
             // given
             ProductPurchaseRequest request = new ProductPurchaseRequest(100L);
+
             when(productPurchaseService.productPurchaseWithCoupon(userId, productId, request))
+
                     .thenThrow(new BusinessException(ProductExceptionCode.COUPON_ALREADY_USED));
 
             // when, then
@@ -277,7 +295,9 @@ class ProductControllerTest {
         void purchaseProductWithCoupon_fail_couponExpired() throws Exception {
             // given
             ProductPurchaseRequest request = new ProductPurchaseRequest(100L);
+
             when(productPurchaseService.productPurchaseWithCoupon(userId, productId, request))
+
                     .thenThrow(new BusinessException(ProductExceptionCode.COUPON_EXPIRED));
 
             // when, then

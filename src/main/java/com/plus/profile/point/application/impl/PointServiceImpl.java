@@ -80,6 +80,7 @@ public class PointServiceImpl implements PointService, PointClientService {
         UserPoint userPoint = byUserId.get();
         if(userPoint.getPoint() < request.productPrice())
             return new PayOffPointResponse(false, PayOffResultType.NOT_ENOUGH_POINTS.getMessage(), PayOffResultType.NOT_ENOUGH_POINTS, 0, 0);
+
         long before = userPoint.getPoint();
 
         userPoint.payOff(request.productPrice());
@@ -87,6 +88,7 @@ public class PointServiceImpl implements PointService, PointClientService {
         UserPointLog paidLog = UserPointLog.createPaidLog(before, after, request);
         userPointLogRepository.save(paidLog);
         return new PayOffPointResponse(true, PayOffResultType.SUCCESS.getMessage(), PayOffResultType.SUCCESS, after, 0);
+
     }
 
     @Override
@@ -98,6 +100,7 @@ public class PointServiceImpl implements PointService, PointClientService {
         Optional<UserCoupon> optionalUserCoupon = userCouponRepository.findById(request.userCouponId());
         if(optionalUserCoupon.isEmpty())
             return new PayOffPointResponse(false, PayOffResultType.COUPON_NOT_FOUND.getMessage(), PayOffResultType.COUPON_NOT_FOUND, 0, 0);
+
 
         UserPoint userPoint = optionalUserPoint.get();
         UserCoupon userCoupon = optionalUserCoupon.get();
@@ -114,6 +117,7 @@ public class PointServiceImpl implements PointService, PointClientService {
 
         if (userPoint.getPoint() < finalPrice) {
             return new PayOffPointResponse(false, PayOffResultType.NOT_ENOUGH_POINTS.getMessage(), PayOffResultType.NOT_ENOUGH_POINTS, userPoint.getPoint(), 0);
+
         }
 
         long before = userPoint.getPoint();
@@ -125,7 +129,7 @@ public class PointServiceImpl implements PointService, PointClientService {
                 before, after, discount, request, userCoupon
         );
         userPointLogRepository.save(paidLog);
-
         return new PayOffPointResponse(true, PayOffResultType.SUCCESS.getMessage(), PayOffResultType.SUCCESS, after, finalPrice);
+
     }
 }

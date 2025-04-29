@@ -6,5 +6,6 @@ public record PayOffPointResponse(
         PayOffResultType resultType,
         long remainPoint,
         long usedPoint
+
 ) {
 }

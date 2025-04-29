@@ -27,6 +27,7 @@ public class ProductController {
         return ApiResponse.success(new PagedModel<>(productService.getAllProducts(pageable)));
     }
 
+
     @PostMapping("/api/v1/products/{productId}/purchase")
     public ApiResponse<ProductPurchaseResponse> purchaseProduct(
             @PathVariable Long productId,

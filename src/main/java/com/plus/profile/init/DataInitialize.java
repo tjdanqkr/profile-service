@@ -1,6 +1,7 @@
 package com.plus.profile.init;
 
 
+
 import com.plus.profile.point.domain.UserCoupon;
 import com.plus.profile.point.domain.repository.UserCouponRepository;
 import com.plus.profile.point.domain.repository.UserPointLogRepository;

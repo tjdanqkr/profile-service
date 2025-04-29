@@ -89,6 +89,7 @@ class ProductPurchaseServiceImplTest {
             when(productPointClientService.payOffPoint(any(PayOffPointRequest.class)))
                     .thenReturn(new PayOffPointResponse(false, PayOffResultType.USER_NOT_FOUND.getMessage(), PayOffResultType.USER_NOT_FOUND, 0, 0));
 
+
             // when & then
             assertThatThrownBy(() ->
                     productPurchaseService.productPurchase(userId, productId)
@@ -127,6 +128,7 @@ class ProductPurchaseServiceImplTest {
             when(productPointClientService.payOffPoint(any(PayOffPointRequest.class)))
                     .thenReturn(new PayOffPointResponse(false, PayOffResultType.NOT_ENOUGH_POINTS.getMessage(), PayOffResultType.NOT_ENOUGH_POINTS, 3000L, 0));
 
+
             // when & then
             assertThatThrownBy(() ->
                     productPurchaseService.productPurchase(userId, productId)
@@ -149,6 +151,7 @@ class ProductPurchaseServiceImplTest {
             when(productRepository.findById(productId)).thenReturn(Optional.of(product));
             when(productPointClientService.payOffPoint(any(PayOffPointRequest.class)))
                     .thenReturn(new PayOffPointResponse(false, PayOffResultType.SYSTEM_ERROR.getMessage(), PayOffResultType.SYSTEM_ERROR, 3000L, 0));
+
 
             // when & then
             assertThatThrownBy(() ->
@@ -177,6 +180,7 @@ class ProductPurchaseServiceImplTest {
             when(productPointClientService.payOffPointWithCoupon(any()))
                     .thenReturn(new PayOffPointResponse(
                             true, "success", PayOffResultType.SUCCESS, 6000L , 4000L
+
                     ));
 
             ProductPurchaseRequest request = new ProductPurchaseRequest(1L);
@@ -192,6 +196,7 @@ class ProductPurchaseServiceImplTest {
             assertThat(response.discountAmount()).isEqualTo(6000L);
             assertThat(response.finalPrice()).isEqualTo(4000L);
             assertThat(response.remainingPoints()).isEqualTo(6000L);
+
 
             verify(productRepository).findById(product.getId());
             verify(productPointClientService).payOffPointWithCoupon(any());
@@ -234,6 +239,7 @@ class ProductPurchaseServiceImplTest {
             when(productPointClientService.payOffPointWithCoupon(any()))
                     .thenReturn(new PayOffPointResponse(false, "잔액 부족", PayOffResultType.NOT_ENOUGH_POINTS, 3000L, 0));
 
+
             ProductPurchaseRequest request = new ProductPurchaseRequest(1L);
 
             // when & then
@@ -257,6 +263,7 @@ class ProductPurchaseServiceImplTest {
 
             when(productPointClientService.payOffPointWithCoupon(any()))
                     .thenReturn(new PayOffPointResponse(false, "쿠폰 없음", PayOffResultType.COUPON_NOT_FOUND, 0, 0));
+
 
             ProductPurchaseRequest request = new ProductPurchaseRequest(1L);
 

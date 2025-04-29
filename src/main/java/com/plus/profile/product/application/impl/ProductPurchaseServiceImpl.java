@@ -75,7 +75,6 @@ public class ProductPurchaseServiceImpl implements ProductPurchaseService {
 
         long discountAmount = product.getPrice() - response.usedPoint();
 
-
         return new ProductPurchaseResponse(
                 product.getId(),
                 product.getName(),
