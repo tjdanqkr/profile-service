@@ -30,6 +30,7 @@ import java.util.UUID;
 @Configuration
 @RequiredArgsConstructor
 @Transactional
+@Profile("DEV")
 public class DataInitialize {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
