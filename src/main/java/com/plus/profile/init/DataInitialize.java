@@ -1,18 +1,17 @@
 package com.plus.profile.init;
 
 
-
 import com.plus.profile.point.domain.UserCoupon;
+import com.plus.profile.point.domain.UserPoint;
 import com.plus.profile.point.domain.repository.UserCouponRepository;
 import com.plus.profile.point.domain.repository.UserPointLogRepository;
+import com.plus.profile.point.domain.repository.UserPointRepository;
 import com.plus.profile.product.domain.Product;
 import com.plus.profile.product.domain.repository.ProductRepository;
 import com.plus.profile.profile.domain.MyProfile;
 import com.plus.profile.profile.domain.repository.ProfileRepository;
 import com.plus.profile.profile.domain.repository.ProfileViewRepository;
 import com.plus.profile.user.domain.User;
-import com.plus.profile.point.domain.UserPoint;
-import com.plus.profile.point.domain.repository.UserPointRepository;
 import com.plus.profile.user.domain.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,7 @@ import java.util.UUID;
 @Configuration
 @RequiredArgsConstructor
 @Transactional
+@Profile("DEV")
 public class DataInitialize {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
