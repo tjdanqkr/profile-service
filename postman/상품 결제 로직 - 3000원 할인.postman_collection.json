@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "03efd541-0847-4fb4-ad73-2b11c5231560",
+		"name": "상품 결제 로직 - 3000원 할인",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. 상품 조회 상품 아이디 얻기",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. userId 얻기 프로필 조회",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/profiles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"profiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. 포인트 및 쿠폰 확인을 위해 userId로 유저 조회",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/7f3cdf59-ce6b-4d46-90c4-736ff9473513",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"7f3cdf59-ce6b-4d46-90c4-736ff9473513"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. 쿠폰 적용(3000원)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userCouponId\": 65\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/products/2/purchase-with-coupon?userId=7f3cdf59-ce6b-4d46-90c4-736ff9473513",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"products",
+						"2",
+						"purchase-with-coupon"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "7f3cdf59-ce6b-4d46-90c4-736ff9473513"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. 포인트 확인",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/7f3cdf59-ce6b-4d46-90c4-736ff9473513",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"7f3cdf59-ce6b-4d46-90c4-736ff9473513"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

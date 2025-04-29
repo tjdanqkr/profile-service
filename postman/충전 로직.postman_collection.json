@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "573b8427-f761-42f3-8295-f85ef3734566",
+		"name": "충전 로직",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. userId 얻기위해 프로필 조회",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/profiles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"profiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. 얻어온 userId 로 조회 (초기 point 10000)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/5c561817-acbf-4e85-a840-3f1030b34b2f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"5c561817-acbf-4e85-a840-3f1030b34b2f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. 충전 준비 orderId 반환",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 500,\n  \"pgType\": \"TOSS\",\n  \"supportKey\": \"abc\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/5c561817-acbf-4e85-a840-3f1030b34b2f/points",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"5c561817-acbf-4e85-a840-3f1030b34b2f",
+						"points"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. 결제 api callback",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/payments/toss/callback?paymentKey=paymentKey&orderId=3641416f-e75c-430a-b662-f298c5386ce4&amount=500",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"payments",
+						"toss",
+						"callback"
+					],
+					"query": [
+						{
+							"key": "paymentKey",
+							"value": "paymentKey"
+						},
+						{
+							"key": "orderId",
+							"value": "3641416f-e75c-430a-b662-f298c5386ce4"
+						},
+						{
+							"key": "amount",
+							"value": "500"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. 포인트 충전 확인 api",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orderId\": \"3641416f-e75c-430a-b662-f298c5386ce4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/5c561817-acbf-4e85-a840-3f1030b34b2f/points/confirm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"5c561817-acbf-4e85-a840-3f1030b34b2f",
+						"points",
+						"confirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. 얻어온 userId 로 조회 (초기 point 10500)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/5c561817-acbf-4e85-a840-3f1030b34b2f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"5c561817-acbf-4e85-a840-3f1030b34b2f"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
