@@ -16,6 +16,7 @@ import java.util.UUID;
                 @Index(name = "IDX_PAYMENT_TRANSACTION_ORDER_ID", columnList = "ORDER_ID"),
                 @Index(name = "IDX_PAYMENT_TRANSACTION_TRANSACTION_STATUS", columnList = "TRANSACTION_STATUS"),
                 @Index(name = "IDX_PAYMENT_TRANSACTION_PG_TYPE", columnList = "PG_TYPE"),
+                @Index(name = "IDX_PAYMENT_TRANSACTION_PG_SUPPORT_KEY", columnList = "PG_SUPPORT_KEY"),
                 @Index(name = "IDX_PAYMENT_TRANSACTION_PAYMENT_CONFIRM_STATUS", columnList = "PAYMENT_CONFIRM_STATUS")
         })
 @Getter

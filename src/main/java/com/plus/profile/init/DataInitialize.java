@@ -1,6 +1,9 @@
 package com.plus.profile.init;
 
 
+import com.plus.profile.point.domain.UserCoupon;
+import com.plus.profile.point.domain.repository.UserCouponRepository;
+import com.plus.profile.point.domain.repository.UserPointLogRepository;
 import com.plus.profile.product.domain.Product;
 import com.plus.profile.product.domain.repository.ProductRepository;
 import com.plus.profile.profile.domain.MyProfile;
@@ -16,19 +19,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
-@Profile({"dev"})
+
 @Configuration
 @RequiredArgsConstructor
+@Transactional
 public class DataInitialize {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final ProfileViewRepository profileViewRepository;
     private final UserPointRepository userPointRepository;
+    private final UserCouponRepository userCouponRepository;
     private final ProductRepository productRepository;
+    private final UserPointLogRepository userPointLogRepository;
+
     private final Random random = new Random();
     private final String[] names = {
             "김민준", "이서준", "박예린", "최지우", "정하준",
@@ -38,8 +47,9 @@ public class DataInitialize {
             "곽하람", "배주원", "천이준", "양유나", "노도연",
             "구채원", "민서진", "하도훈", "방예진", "서다온"
     };
+
+
     @PostConstruct
-    @Transactional
     void init() {
         resetDatabase();
         List<User> users = createUserTotal30();
@@ -62,24 +72,65 @@ public class DataInitialize {
     }
 
     private void resetDatabase(){
+        userPointLogRepository.deleteAll();
+        userPointRepository.deleteAll();
+        userCouponRepository.deleteAll();
         userRepository.deleteAll();
         profileRepository.deleteAll();
         profileViewRepository.deleteAll();
+        productRepository.deleteAll();
     }
 
     private List<User> createUserTotal30() {
 
         List<User> users = new ArrayList<>();
-        for(String name: names){
-            User user = User.builder()
+        for(int i = 0; i < 30; i++) {
+            String name = names[i];
+            User tmp = User.builder()
                     .username(name)
                     .encodedPassword("password")
                     .build();
+
+            User user = userRepository.save(tmp);
             users.add(user);
-            UserPoint point = UserPoint.builder().user(user).point(0L).build();
+
+            UserPoint point = UserPoint.builder().user(user).point(10_000L).build();
             userPointRepository.save(point);
+
+            UserCoupon couponPercent20 = UserCoupon.builder()
+                    .user(user)
+                    .couponId(UUID.randomUUID())
+                    .couponCode("COUPON_CODE")
+                    .couponIsPercentage(true)
+                    .discountAmount(20)
+                    .description("20% 할인 쿠폰")
+                    .expirationDate(LocalDateTime.now().plusDays(30))
+                    .build();
+            userCouponRepository.save(couponPercent20);
+
+            UserCoupon couponAmount3000 = UserCoupon.builder()
+                    .user(user)
+                    .couponId(UUID.randomUUID())
+                    .couponCode("COUPON_CODE")
+                    .couponIsPercentage(false)
+                    .discountAmount(3_000)
+                    .description("3000원 할인 쿠폰")
+                    .expirationDate(LocalDateTime.now().plusDays(30))
+                    .build();
+            userCouponRepository.save(couponAmount3000);
+
+            UserCoupon couponPercent70 = UserCoupon.builder()
+                    .user(user)
+                    .couponId(UUID.randomUUID())
+                    .couponCode("COUPON_CODE")
+                    .couponIsPercentage(true)
+                    .discountAmount(70)
+                    .description("70% 할인 쿠폰")
+                    .expirationDate(LocalDateTime.now().plusDays(30))
+                    .build();
+            userCouponRepository.save(couponPercent70);
         }
-        userRepository.saveAll(users);
+
         return users;
     }
     private List<Product> createProduct() {

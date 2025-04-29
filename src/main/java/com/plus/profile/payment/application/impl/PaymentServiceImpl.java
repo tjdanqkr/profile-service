@@ -57,7 +57,11 @@ public class PaymentServiceImpl implements PaymentService, PaymentCallbackServic
     public boolean confirmTossPayment(String paymentKey, String orderId, String amount) {
         PaymentTransaction transaction = paymentTransactionRepository.findByOrderId(UUID.fromString(orderId))
                 .orElseThrow(() -> new BusinessException(PaymentExceptionCode.PAYMENT_NOT_FOUND));
-
+        if(transaction.getTransactionAmount() != Long.parseLong(amount)) {
+            log.error("[TOSS 결제 승인 실패] 결제 금액 불일치");
+            transaction.failPayment();
+            return false;
+        }
         try {
             String response = paymentTossClient.approve(paymentKey, orderId);
             transaction.completePayment(response);
@@ -75,6 +79,7 @@ public class PaymentServiceImpl implements PaymentService, PaymentCallbackServic
     public boolean confirmKakaoPayment(String pgToken, String orderId) {
         PaymentTransaction transaction = paymentTransactionRepository.findByOrderId(UUID.fromString(orderId))
                 .orElseThrow(() -> new BusinessException(PaymentExceptionCode.PAYMENT_NOT_FOUND));
+
         try {
             String response = paymentKakaoClient.approve(pgToken, orderId, transaction.getPgSupportKey());
             transaction.completePayment(response);
@@ -101,7 +106,6 @@ public class PaymentServiceImpl implements PaymentService, PaymentCallbackServic
                 request.userId(),
                 transaction.getOrderId(),
                 ConfirmPaymentResult.SUCCESS,
-
                 transaction.getTransactionAmount()
         );
     }
