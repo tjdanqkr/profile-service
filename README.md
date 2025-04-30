@@ -10,6 +10,8 @@
 - 최대한 간단한 테스트를 위하여 모든 기능을 제공하지 않습니다.
 - MSA 환경을 고려하여 최대한 서로 의존성을 줄이고, 각 모듈을 독립적으로 설계했습니다.
 - 인증 인가에 최대한 영향을 받지 않게 userId가 필요한 경우 pathVariable이나 parameter로 처리했습니다.
+- 프로젝트 실행시 init data 가 저장됩니다.
+
 
 ---
 
@@ -172,6 +174,8 @@
 - 모든 API는 **MockMvc 기반 통합 테스트**로 검증
 - test/java/com/plus/profile/integration 통합 테스트 내용 존재
 - postman collection 파일 제공 (postman/*.json) id는 수정 필요
+- 조회수 증가 부분은 jmeter(user: 10, loop: 100) 성공
+
 
 ---
 
